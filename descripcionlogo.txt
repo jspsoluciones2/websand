@@ -1,0 +1,51 @@
+Tipo de imagen: Logotipo vertical corporativo, compuesto por un isotipo ilustrativo en la mitad superior y texto tipográfico centrado en la mitad inferior, sobre un fondo claro o blanquecino (aprox. #f0efed).
+
+Paleta de colores dominante:
+Negro profundo (#06070a), Rojo vibrante (#db141c), Azul oscuro (#082e8e), Amarillos y dorados (#e7ac23, #f6c150, #bd781b, #d1b087), Azules medios/pálidos (#8697c6, #6185c1) y tonos grises (#515150).
+
+1. Descripción del Isotipo (Ilustración superior):
+
+Elemento central: Es la silueta de perfil de una mujer bailando danza folclórica. Su piel y cuerpo son de color negro puro (#06070a). Está en una postura muy dinámica, con el brazo izquierdo alzado con gracia, el derecho extendido sosteniendo la falda, y de puntillas sobre un pie. En su cabello recogido lleva un tocado de flores blancas y un arete circular dorado.
+
+Vestimenta: Lleva un traje típico tradicional (similar al de la cumbia colombiana). El vestido es blanco con amplios pliegues que dan sensación de movimiento. El borde del escote (cuello) y el inmenso ruedo de la falda ondulada están decorados con tres gruesas franjas que forman los colores de la bandera de Colombia: Amarillo (tonos #e7ac23 / #f6c150), Azul (#082e8e) y Rojo (#db141c). En la cintura lleva un cinturón con estos mismos tres colores.
+
+Marco: La bailarina está envuelta parcialmente por un trazo circular fino de color dorado que no llega a cerrarse en la parte inferior, simulando una media luna o aura.
+
+Elementos flotantes (Representación de las Artes): Alrededor de la figura femenina flotan varios íconos:
+
+Arriba a la izquierda: Una clave de sol en azul claro/medio y un pincel de arte con el mango negro y cerdas doradas/tierra (#bd781b / #d1b087).
+
+Centro izquierda: Una pequeña corchea musical en rojo (#db141c).
+
+Arriba a la derecha: Una corchea musical en amarillo (#f6c150).
+
+Abajo a la derecha: Dos clásicas máscaras de teatro (Comedia y Tragedia). La que está en primer plano es blanca con rostro sonriente y contornos negros; la que está detrás es negra con rostro triste.
+
+2. Descripción de la Tipografía (Mitad inferior):
+El texto está dispuesto en bloque, completamente centrado y organizado de manera jerárquica:
+
+Primera sección (texto pequeño, negro #06070a, sans-serif):
+Dice: "CORPORACIÓN"
+Debajo dice: "ARTÍSTICA Y CULTURAL"
+
+Divisor 1: Una fina línea horizontal dorada con un pequeño punto en el medio.
+
+Segunda sección (Título principal, fuente muy grande, gruesa y sans-serif):
+Dice la palabra: "COMPARTIENDO" (todo en mayúsculas y color negro #06070a).
+Justo debajo, la palabra "ARTE" en tamaño gigante. Cada letra tiene un color distinto, haciendo alusión a la bandera y al nombre:
+
+A = Amarillo (#f6c150)
+
+R = Azul (#082e8e)
+
+T = Rojo (#db141c)
+
+E = Negro (#06070a)
+
+Tercera sección (texto de ubicación):
+Dice: "NORTE DE SANTANDER" (en negro). Esta frase tiene una fina línea horizontal dorada a su izquierda y otra a su derecha.
+
+Cuarta sección (Eslogan, texto pequeño, negro #06070a):
+Un pequeño punto dorado precede a estas dos líneas finales:
+Dice: "RESCATANDO TRADICIONES A TRAVÉS"
+Debajo dice: "DE LA EDUCACIÓN ARTÍSTICA"

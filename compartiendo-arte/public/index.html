@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compartiendo Arte | Corporación Artística y Cultural — Norte de Santander</title>
+  <meta name="description" content="Corporación Artística y Cultural Compartiendo Arte en Norte de Santander. Rescatando tradiciones a través de la educación artística.">
+  <meta property="og:title" content="Compartiendo Arte — Corporación Artística y Cultural">
+  <meta property="og:description" content="Rescatando tradiciones a través de la educación artística en Norte de Santander.">
+  <meta property="og:image" content="https://res.cloudinary.com/dvo5crvec/image/upload/v1790899366/ISOTIPO_odzqtv.png">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dvo5crvec/image/upload/v1790899366/ISOTIPO_odzqtv.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;600&family=Lora:ital,wght@1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <!-- Preloader / intro de primera visita -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__marca">
+      <span class="pre">Corporación Artística y Cultural</span>
+      <div class="palabra" aria-hidden="true">
+        <span class="letra letra--a">A</span><span class="letra letra--r">R</span><span class="letra letra--t">T</span><span class="letra letra--e">E</span>
+      </div>
+    </div>
+    <div class="preloader__linea"><div class="relleno" id="preloader-relleno"></div></div>
+    <span class="preloader__frase">Rescatando tradiciones a través de la educación artística</span>
+  </div>
+  <noscript><style>.preloader{display:none}.hero__estatico{display:block}</style></noscript>
+
+  <!-- ===== Navbar ===== -->
+  <header class="navbar" id="navbar">
+    <div class="navbar__contenedor">
+      <a class="navbar__logo" href="#inicio" aria-label="Compartiendo Arte — inicio">
+        <img src="https://res.cloudinary.com/dvo5crvec/image/upload/v1790899366/ISOTIPO_odzqtv.png" alt="Logotipo de Compartiendo Arte" width="48" height="48">
+        <span>COMPARTIENDO<small>NORTE DE SANTANDER</small></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <ul class="navbar__enlaces" id="navbar-enlaces">
+          <li><a href="#inicio" class="activo">Inicio</a></li>
+          <li><a href="#sobrenosotros">Sobre Nosotros</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#galeria">Galería</a></li>
+          <li><a href="#certificados">Certificados</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+      <a class="boton boton--primario navbar__cta" href="#contacto">Contáctanos</a>
+      <button class="navbar__hamburguesa" id="hamburguesa" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú de navegación">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Menú móvil -->
+  <nav class="menu-movil" id="menu-movil" aria-label="Menú móvil">
+    <a href="#inicio">Inicio</a>
+    <a href="#sobrenosotros">Sobre Nosotros</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#galeria">Galería</a>
+    <a href="#certificados">Certificados</a>
+    <a href="#contacto">Contacto</a>
+    <a href="politicas.html">Políticas y Condiciones</a>
+  </nav>
+
+  <main id="contenido">
+
+    <!-- ===== Hero ===== -->
+    <section class="hero" id="inicio" aria-label="Presentación">
+      <div class="hero__fondo" id="hero-fondo" hidden>
+        <canvas id="hero-canvas" aria-hidden="true"></canvas>
+      </div>
+      <div class="hero__estatico" aria-hidden="true"></div>
+      <div class="contenedor hero__contenido">
+        <span class="hero__etiqueta">Corporación Artística y Cultural — Norte de Santander</span>
+        <h1>Rescatando tradiciones <span class="resaltado">a través del arte</span></h1>
+        <p class="hero__eslogan">Formación artística y cultural con enfoque de género e inclusión, para niños, niñas, adolescentes, jóvenes y adultos mayores.</p>
+        <div class="hero__acciones">
+          <a class="boton boton--primario" href="#contacto">Contáctanos</a>
+          <a class="boton boton--outline-claro" href="#sobrenosotros">Conócenos</a>
+        </div>
+      </div>
+      <a class="hero__indicador" href="#sobrenosotros" aria-label="Bajar a la siguiente sección">
+        <span>Descubre</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </a>
+    </section>
+
+    <!-- ===== Sobre Nosotros ===== -->
+    <section class="seccion seccion-blanca sobre" id="sobrenosotros" aria-labelledby="titulo-sobre">
+      <div class="contenedor">
+        <div class="cabecera-seccion">
+          <h2 id="titulo-sobre">Sobre Nosotros</h2>
+          <div class="divisor" aria-hidden="true"><span class="punto"></span></div>
+          <p class="eslogan">Una corporación que transforma vidas a través del arte</p>
+        </div>
+        <p style="text-align:center; margin-inline:auto; margin-bottom:var(--esp-12);">Somos una entidad sin ánimo de lucro constituida en 2021, dedicada a la enseñanza, promoción y fortalecimiento de las expresiones artísticas y culturales en las comunidades rurales de Norte de Santander, con enfoque de género e inclusión.</p>
+
+        <div class="grid grid-mision">
+          <article class="tarjeta tarjeta--mision reveal">
+            <h3>Misión</h3>
+            <p>Centramos nuestros esfuerzos en la enseñanza, promoción y fortalecimiento de las expresiones artísticas y culturales, con enfoque de género e inclusión, orientadas al mejoramiento de la calidad de vida de niños, niñas, adolescentes, jóvenes y adultos mayores. A través de procesos de formación cultural y artística, promovemos y preservamos el patrimonio cultural de la región, fomentamos la igualdad, la participación y la diversidad, empoderando a las personas y comunidades para el desarrollo de sus habilidades, talentos y capacidades.</p>
+          </article>
+          <article class="tarjeta tarjeta--vision reveal">
+            <h3>Visión</h3>
+            <p>Aspiramos a consolidarnos como un referente líder en la promoción, preservación y fortalecimiento del patrimonio cultural del departamento, destacándonos por nuestro compromiso con la igualdad de género, la inclusión social y la diversidad cultural. Visualizamos un futuro en el que niños, niñas, adolescentes, jóvenes y adultos mayores, sin distinción de género, origen étnico o condición social, tengan acceso a procesos de formación artística y cultural de calidad.</p>
+          </article>
+        </div>
+
+        <h3 style="text-align:center; margin-block:var(--esp-16) var(--esp-8); font-size:1.4rem;">Nuestros Valores</h3>
+        <div class="grid grid-valores">
+          <article class="tarjeta tarjeta--valor reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
+            <h4>Compromiso</h4>
+            <p>Nos comprometemos con cada proceso formativo y con el desarrollo integral de nuestra comunidad.</p>
+          </article>
+          <article class="tarjeta tarjeta--valor reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+            <h4>Respeto</h4>
+            <p>Valoramos a cada persona, reconociendo sus diferencias y promoviendo un trato digno y amable.</p>
+          </article>
+          <article class="tarjeta tarjeta--valor reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></div>
+            <h4>Cultura</h4>
+            <p>Promovemos y preservamos nuestras tradiciones, fortaleciendo nuestra identidad cultural.</p>
+          </article>
+          <article class="tarjeta tarjeta--valor reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg></div>
+            <h4>Inclusión</h4>
+            <p>Garantizamos espacios para todos, fomentando la participación sin discriminación.</p>
+          </article>
+          <article class="tarjeta tarjeta--valor reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></div>
+            <h4>Educación</h4>
+            <p>Creemos en la educación como herramienta de transformación y crecimiento.</p>
+          </article>
+          <article class="tarjeta tarjeta--valor reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg></div>
+            <h4>Responsabilidad</h4>
+            <p>Actuamos con responsabilidad en cada acción, cumpliendo nuestros compromisos.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Servicios ===== -->
+    <section class="seccion seccion-clara servicios" id="servicios" aria-labelledby="titulo-servicios">
+      <div class="contenedor">
+        <div class="cabecera-seccion">
+          <h2 id="titulo-servicios">Nuestros Servicios</h2>
+          <div class="divisor" aria-hidden="true"><span class="punto"></span></div>
+          <p class="eslogan">Talleres y procesos formativos en las artes del isotipo</p>
+        </div>
+        <!-- TODO: contenido real de servicios pendiente del cliente -->
+        <div class="grid">
+          <article class="tarjeta servicio-tarjeta reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></div>
+            <h3>Música</h3>
+            <p>Talleres de formación e iniciación musical para todas las edades.</p>
+            <a href="https://wa.me/573183084857?text=%C2%A1Hola!%20Quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20Corporaci%C3%B3n%20Compartiendo%20Arte" target="_blank" rel="noopener">Más información →</a>
+          </article>
+          <article class="tarjeta servicio-tarjeta reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2.5"></circle><path d="M12 8v5"></path><path d="M12 9.5 6 13"></path><path d="M12 8.5l5-2.5"></path><path d="M12 13l-3.5 7.5"></path><path d="M12 13l4 6.5"></path></svg></div>
+            <h3>Danza</h3>
+            <p>Danzas folclóricas y tradicionales que celebran nuestra identidad.</p>
+            <a href="https://wa.me/573183084857?text=%C2%A1Hola!%20Quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20Corporaci%C3%B3n%20Compartiendo%20Arte" target="_blank" rel="noopener">Más información →</a>
+          </article>
+          <article class="tarjeta servicio-tarjeta reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8 10.5c.5.8 1.2 1.2 2 1.2s1.5-.4 2-1.2"></path><path d="M14 13c.8.8 1.8 1.2 2.8 1.1"></path><path d="M9 16.5c1 .8 2 1.2 3 1.2s2-.4 3-1.2"></path><path d="M8 8.5 10 8"></path></svg></div>
+            <h3>Teatro</h3>
+            <p>Expresión escénica y oralidad para desarrollar confianza y creatividad.</p>
+            <a href="https://wa.me/573183084857?text=%C2%A1Hola!%20Quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20Corporaci%C3%B3n%20Compartiendo%20Arte" target="_blank" rel="noopener">Más información →</a>
+          </article>
+          <article class="tarjeta servicio-tarjeta reveal">
+            <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></div>
+            <h3>Artes Plásticas</h3>
+            <p>Pintura y creación plástica para explorar la libertad creativa.</p>
+            <a href="https://wa.me/573183084857?text=%C2%A1Hola!%20Quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20Corporaci%C3%B3n%20Compartiendo%20Arte" target="_blank" rel="noopener">Más información →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Galería ===== -->
+    <section class="seccion seccion-tinte galeria" id="galeria" aria-labelledby="titulo-galeria">
+      <div class="contenedor">
+        <div class="cabecera-seccion">
+          <h2 id="titulo-galeria">Galería</h2>
+          <div class="divisor" aria-hidden="true"><span class="punto"></span></div>
+          <p class="eslogan">Momentos de nuestros talleres y actividades</p>
+        </div>
+        <div class="galeria__grid" id="galeria-grid"></div>
+        <p class="galeria__nota">Las fotografías se publican conforme a las autorizaciones correspondientes, con protección reforzada de los datos de niños, niñas y adolescentes (Ley 1581 de 2012).</p>
+      </div>
+    </section>
+
+    <!-- ===== Certificados ===== -->
+    <section class="seccion seccion-oscura certificados" id="certificados" aria-labelledby="titulo-certificados">
+      <div class="contenedor">
+        <div class="cabecera-seccion">
+          <h2 id="titulo-certificados" style="color:#fff;">Certificados</h2>
+          <div class="divisor" aria-hidden="true"><span class="punto"></span></div>
+          <p class="eslogan" style="color:var(--texto-claro);">Consulta tu certificado de participación con tu número de documento</p>
+        </div>
+        <div class="consulta">
+          <form class="certificados__form" id="certificados-form" novalidate>
+            <div class="certificados__campo">
+              <label for="certificados-doc">Número de documento</label>
+              <input type="text" id="certificados-doc" name="doc" inputmode="numeric" autocomplete="off" placeholder="Ej. 1234567890" maxlength="15" required>
+            </div>
+            <button type="submit" class="boton boton--dorado" id="certificados-boton">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              Consultar
+            </button>
+          </form>
+          <p class="certificados__ayuda" style="margin-top:var(--esp-3);">Ingresa el número de documento con el que participaste en nuestros talleres.</p>
+          <div class="certificados__resultado" id="certificados-resultado" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Contacto ===== -->
+    <section class="seccion seccion-calida contacto" id="contacto" aria-labelledby="titulo-contacto">
+      <div class="contenedor">
+        <div class="cabecera-seccion">
+          <h2 id="titulo-contacto">Contacto</h2>
+          <div class="divisor" aria-hidden="true"><span class="punto"></span></div>
+          <p class="eslogan">Escríbenos, con gusto te responderemos</p>
+        </div>
+        <div class="contacto__grid">
+          <!-- Formulario Tally (placeholder hasta tener el código definitivo) -->
+          <div class="panel-placeholder" id="panel-tally">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <h4>Formulario en preparación</h4>
+            <p>Muy pronto podrás escribirnos desde aquí. Mientras tanto, escríbenos directamente:</p>
+            <a class="boton boton--whatsapp" href="https://wa.me/573183084857?text=%C2%A1Hola!%20Quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20Corporaci%C3%B3n%20Compartiendo%20Arte" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.592.149-.123.347-.416.966-.56 1.177-.143.211-.287.235-.534.099-.297-.149-1.255-.463-2.39-1.475-.884-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"></path></svg>
+              Escríbenos por WhatsApp
+            </a>
+            <!-- Contenedor para el embed de Tally: insertar aquí el código cuando esté listo -->
+            <div id="tally-form-container" hidden></div>
+          </div>
+          <div class="tarjeta contacto__tarjeta">
+            <h3 style="margin-bottom:var(--esp-4);">Datos de contacto</h3>
+            <div class="contacto__item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <div><strong>Dirección</strong><span>Km 14, Vereda Agua Blanca, Vía Puerto Santander, Cúcuta, Norte de Santander</span></div>
+            </div>
+            <div class="contacto__item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <div><strong>Correo</strong><a href="mailto:corpocarte@gmail.com">corpocarte@gmail.com</a></div>
+            </div>
+            <div class="contacto__item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              <div><strong>Teléfonos</strong><a href="tel:+573183084857">318 308 4857</a> · <a href="tel:+573238920570">323 892 0570</a></div>
+            </div>
+            <div class="contacto__item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg>
+              <div><strong>NIT</strong><span>901.527.000-1</span></div>
+            </div>
+            <div>
+              <strong style="font-family:var(--fuente-titulos); font-size:.9rem; display:block; margin-bottom:var(--esp-3);">Redes sociales</strong>
+              <div class="redes-sociales redes-sociales--claro" aria-label="Redes sociales">
+                <a href="#" data-red-social="tiktok" aria-label="TikTok">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path></svg>
+                </a>
+                <a href="#" data-red-social="instagram" aria-label="Instagram">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.354 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+                </a>
+                <a href="#" data-red-social="facebook" aria-label="Facebook">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+                </a>
+                <a href="#" data-red-social="youtube" aria-label="YouTube">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="contenedor">
+      <div class="footer__grid">
+        <div>
+          <img src="https://res.cloudinary.com/dvo5crvec/image/upload/v1790899366/ISOTIPO_odzqtv.png" alt="Logotipo de Compartiendo Arte" width="72" height="72">
+          <p style="font-size:.95rem;">Corporación Artística y Cultural sin ánimo de lucro. Rescatando tradiciones a través de la educación artística.</p>
+          <div class="redes-sociales" style="margin-top:var(--esp-4);" aria-label="Redes sociales">
+            <a href="#" data-red-social="tiktok" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path></svg>
+            </a>
+            <a href="#" data-red-social="instagram" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.354 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+            </a>
+            <a href="#" data-red-social="facebook" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+            </a>
+            <a href="#" data-red-social="youtube" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+            </a>
+          </div>
+        </div>
+        <nav aria-label="Enlaces del sitio">
+          <h4>Secciones</h4>
+          <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#sobrenosotros">Sobre Nosotros</a></li>
+            <li><a href="#servicios">Servicios</a></li>
+            <li><a href="#galeria">Galería</a></li>
+            <li><a href="#certificados">Certificados</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+          </ul>
+        </nav>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="politicas.html">Políticas y Condiciones</a></li>
+            <li class="footer__legal">NIT 901.527.000-1</li>
+            <li class="footer__legal">Km 14, Vereda Agua Blanca, Vía Puerto Santander, Cúcuta</li>
+            <li class="footer__legal">corpocarte@gmail.com · 318 308 4857</li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer__copia">© 2026 Corporación Artística y Cultural Compartiendo Arte en Norte de Santander. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ===== Widget flotante de contacto ===== -->
+  <div class="widget-contacto" id="widget-contacto">
+    <div class="widget-contacto__menu" id="widget-menu" role="menu" aria-label="Canales de contacto">
+      <a class="widget-contacto__opcion widget-contacto__opcion--whatsapp" role="menuitem" href="https://wa.me/573183084857?text=%C2%A1Hola!%20Quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20Corporaci%C3%B3n%20Compartiendo%20Arte" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.592.149-.123.347-.416.966-.56 1.177-.143.211-.287.235-.534.099-.297-.149-1.255-.463-2.39-1.475-.884-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"></path></svg>
+        WhatsApp
+      </a>
+      <button class="widget-contacto__opcion widget-contacto__opcion--ia" role="menuitem" id="widget-ia-btn" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2"></rect><path d="M12 8V4"></path><circle cx="12" cy="3" r="1"></circle><circle cx="9" cy="14" r="1" fill="currentColor"></circle><circle cx="15" cy="14" r="1" fill="currentColor"></circle><path d="M9 17.5h6"></path></svg>
+        Asistente IA
+      </button>
+      <button class="widget-contacto__opcion widget-contacto__opcion--correo" role="menuitem" id="widget-correo-btn" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        Correo
+      </button>
+    </div>
+    <button class="widget-contacto__fab" id="widget-fab" aria-expanded="false" aria-controls="widget-menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+      <span>Contáctanos</span>
+    </button>
+  </div>
+
+  <!-- Modal Asistente IA -->
+  <div class="widget-modal" id="modal-ia" role="dialog" aria-modal="true" aria-labelledby="modal-ia-titulo">
+    <div class="widget-modal__panel">
+      <div class="widget-modal__cabecera">
+        <h3 id="modal-ia-titulo">Asistente IA</h3>
+        <button class="widget-modal__cerrar" data-cerrar-modal aria-label="Cerrar ventana">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <!-- Insertar aquí el código de embed del asistente IA (plataforma externa) -->
+      <div id="ai-assistant-container" class="panel-placeholder" style="border-style:dashed;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2"></rect><path d="M12 8V4"></path><circle cx="12" cy="3" r="1"></circle><circle cx="9" cy="14" r="1" fill="currentColor"></circle><circle cx="15" cy="14" r="1" fill="currentColor"></circle></svg>
+        <h4>Asistente en preparación</h4>
+        <p>Nuestro asistente virtual estará disponible muy pronto. Mientras tanto, contáctanos por WhatsApp o correo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Correo / Tally -->
+  <div class="widget-modal" id="modal-correo" role="dialog" aria-modal="true" aria-labelledby="modal-correo-titulo">
+    <div class="widget-modal__panel">
+      <div class="widget-modal__cabecera">
+        <h3 id="modal-correo-titulo">Escríbenos</h3>
+        <button class="widget-modal__cerrar" data-cerrar-modal aria-label="Cerrar ventana">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <!-- Insertar aquí el embed del formulario Tally cuando el código esté listo -->
+      <div id="tally-modal-container" class="panel-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        <h4>Formulario en preparación</h4>
+        <p>Muy pronto podrás enviarnos un mensaje desde aquí. Mientras tanto, escríbenos a <a href="mailto:corpocarte@gmail.com">corpocarte@gmail.com</a> o por WhatsApp.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox de galería -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
+    <button class="lightbox__cerrar" id="lightbox-cerrar" aria-label="Cerrar visor">✕</button>
+    <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="Imagen anterior">‹</button>
+    <img class="lightbox__imagen" id="lightbox-imagen" src="" alt="">
+    <button class="lightbox__nav lightbox__nav--sig" id="lightbox-sig" aria-label="Imagen siguiente">›</button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

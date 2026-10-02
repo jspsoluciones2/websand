@@ -1,0 +1,13 @@
+{
+  "name": "compartiendo-arte",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio web de la Corporación Artística y Cultural Compartiendo Arte en Norte de Santander",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.146.0"
+  }
+}

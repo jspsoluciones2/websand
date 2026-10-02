@@ -1,0 +1,17 @@
+# --- Cloudflare / Wrangler ---
+# Local state: contains account cache and miniflare databases. NEVER commit.
+.wrangler/
+.dev.vars
+.dev.vars.*
+
+# --- Node ---
+node_modules/
+
+# --- Local tooling artifacts ---
+.atl/
+.playwright-mcp/
+*.log
+
+# --- Temp screenshots ---
+widget-menu.png
+widget-corregido.png
