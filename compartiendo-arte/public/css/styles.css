@@ -236,27 +236,28 @@ a:hover { color: var(--rojo); }
 .nav-pill {
   position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
   z-index: 1000;
-  width: min(100% - 28px, 880px);
+  width: min(100% - 28px, 1120px);
   min-height: var(--alto-nav);
-  display: flex; align-items: center; justify-content: space-between; gap: var(--esp-4);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--esp-3);
   background: var(--tarjeta);
   border-radius: var(--radio-nav);
   box-shadow: var(--sombra-flotante);
-  padding: 10px 20px;
+  padding: 10px 18px;
   transition: box-shadow .3s ease;
 }
 .nav-pill.desplazada { box-shadow: var(--sombra-elevada); }
 
-.nav-pill__logo { display: inline-flex; align-items: center; gap: var(--esp-3); text-decoration: none; }
+.nav-pill__logo { display: inline-flex; align-items: center; gap: var(--esp-3); text-decoration: none; flex-shrink: 0; }
 .nav-pill__logo img { height: 40px; width: 40px; border-radius: 10px; }
 .nav-pill__logo .texto { display: flex; flex-direction: column; line-height: 1.05; }
-.nav-pill__logo .texto strong { font-family: var(--fuente-display); font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; color: var(--tinta); }
-.nav-pill__logo .texto small { font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-suave); }
+.nav-pill__logo .texto strong { font-family: var(--fuente-display); font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; color: var(--tinta); white-space: nowrap; }
+.nav-pill__logo .texto small { font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-suave); white-space: nowrap; }
 
-.nav-pill__enlaces { display: none; list-style: none; align-items: center; gap: var(--esp-1); }
+.nav-pill__enlaces { display: none; list-style: none; align-items: center; gap: 0; }
 .nav-pill__enlaces a {
-  font-size: 14.5px; font-weight: 500; color: var(--tinta);
-  text-decoration: none; padding: 8px 14px; border-radius: var(--radio-etiqueta);
+  font-size: 14px; font-weight: 500; color: var(--tinta);
+  text-decoration: none; padding: 8px 11px; border-radius: var(--radio-etiqueta);
+  white-space: nowrap;
   transition: background-color .2s ease, color .2s ease;
 }
 .nav-pill__enlaces a:hover { background: var(--azul-tinte); color: var(--azul); }
@@ -685,6 +686,26 @@ a:hover { color: var(--rojo); }
 }
 .ficha-legal div { display: grid; grid-template-columns: auto 1fr; gap: var(--esp-3); }
 .ficha-legal strong { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--azul); }
+
+/* Grid de página de contenido (donantes) */
+.pagina-grid { grid-template-columns: 1fr; }
+@media (min-width: 768px) { .pagina-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* Tarjetas de descarga (transparencia RTE/DIAN) */
+.descargas-grid { grid-template-columns: 1fr; }
+@media (min-width: 768px) { .descargas-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .descargas-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.descarga-tarjeta { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+.descarga-tarjeta .tarjeta__icono { margin-bottom: var(--esp-4); }
+.descarga-tarjeta h4 { font-family: var(--fuente-display); font-weight: 600; font-size: 1.1rem; letter-spacing: -0.01em; margin-bottom: var(--esp-2); }
+.descarga-tarjeta p { color: var(--tinta-suave); font-size: .95rem; margin-bottom: var(--esp-5); flex-grow: 1; }
+.descarga-tarjeta .boton { align-self: flex-start; min-height: 44px; padding: 8px 16px; font-size: .92rem; }
+
+/* La 5a tarjeta centra sola en la ultima fila de 3 columnas */
+@media (min-width: 1024px) {
+  .descargas-grid .descarga-tarjeta:last-child:nth-child(3n+1) { grid-column: 1 / -1; max-width: 420px; }
+}
 
 /* ===== Responsive: tablet ===== */
 @media (min-width: 768px) {
