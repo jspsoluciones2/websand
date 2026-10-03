@@ -8,10 +8,10 @@ export function initNavbar() {
   const menuMovil = document.getElementById('menu-movil');
   if (!navbar) return;
 
-  // Compact navbar on scroll.
+  // Elevated shadow when the pill scrolls with the page.
   window.addEventListener(
     'scroll',
-    () => navbar.classList.toggle('compacta', window.scrollY > 40),
+    () => navbar.classList.toggle('desplazada', window.scrollY > 40),
     { passive: true }
   );
 
