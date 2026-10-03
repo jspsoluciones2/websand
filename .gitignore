@@ -13,5 +13,7 @@ node_modules/
 *.log
 
 # --- Temp screenshots ---
+/*..playwright-mcp/
+/*.png
 widget-menu.png
 widget-corregido.png

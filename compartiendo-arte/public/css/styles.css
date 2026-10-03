@@ -238,7 +238,9 @@ a:hover { color: var(--rojo); }
   z-index: 1000;
   width: min(100% - 28px, 1120px);
   min-height: var(--alto-nav);
-  display: flex; align-items: center; justify-content: space-between; gap: var(--esp-3);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: nowrap;                 /* blindado contra deformación vertical */
+  gap: var(--esp-3);
   background: var(--tarjeta);
   border-radius: var(--radio-nav);
   box-shadow: var(--sombra-flotante);
@@ -253,10 +255,10 @@ a:hover { color: var(--rojo); }
 .nav-pill__logo .texto strong { font-family: var(--fuente-display); font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; color: var(--tinta); white-space: nowrap; }
 .nav-pill__logo .texto small { font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-suave); white-space: nowrap; }
 
-.nav-pill__enlaces { display: none; list-style: none; align-items: center; gap: 0; }
+.nav-pill__enlaces { display: none; list-style: none; align-items: center; gap: 0; min-width: 0; }
 .nav-pill__enlaces a {
   font-size: 14px; font-weight: 500; color: var(--tinta);
-  text-decoration: none; padding: 8px 11px; border-radius: var(--radio-etiqueta);
+  text-decoration: none; padding: 8px 10px; border-radius: var(--radio-etiqueta);
   white-space: nowrap;
   transition: background-color .2s ease, color .2s ease;
 }
@@ -724,12 +726,16 @@ a:hover { color: var(--rojo); }
 /* ===== Responsive: escritorio ===== */
 @media (min-width: 1024px) {
   .nav-pill__enlaces { display: flex; }
-  .nav-pill__cta { display: inline-flex; }
   .nav-pill__hamburguesa { display: none; }
   .sobre .grid-mision { grid-template-columns: repeat(2, 1fr); }
   .servicios .grid { grid-template-columns: repeat(4, 1fr); }
   .galeria__grid { grid-template-columns: repeat(3, 1fr); }
   .hero__tira-artes { display: none; }
+}
+
+/* El CTA de la píldora solo aparece con espacio de sobra */
+@media (min-width: 1200px) {
+  .nav-pill__cta { display: inline-flex; }
 }
 
 /* Collage de polaroids solo con espacio de sobra */
