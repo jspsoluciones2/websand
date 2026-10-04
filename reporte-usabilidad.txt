@@ -1,0 +1,146 @@
+====================================================================
+REPORTE DE AUDITORÍA DE USABILIDAD Y ACCESIBILIDAD — SITIO COMPARTIENDO ARTE
+Fecha: 2026-10-03 | Auditor: revisión manual con evidencia de código
+Alcance: public/index.html, public/politicas.html, public/css/styles.css,
+public/js/*.js (11 módulos), estiloweb.md (tabla de contrastes verificados)
+Lente decisivo: FAMILIAS DE COMUNIDADES RURALES EN CELULAR CON DATOS LENTOS
+URL: https://compartiendo-arte.sistemasclubtennis.workers.dev
+====================================================================
+
+1. RESUMEN EJECUTIVO
+--------------------------------------------------------------------
+Para la audiencia objetivo (familias rurales en móvil, datos lentos),
+el sitio acierta en lo estructural: mobile-first desde 360px, menú
+hamburguesa funcional, widget de contacto siempre visible, botones de
+48px, estados vacíos amables y accesibilidad sólida (teclado, aria,
+reduced-motion). Los dos lastres reales para esa audiencia son el LOGO
+DE 1.15 MB SIN OPTIMIZAR (se descarga antes de ver NADA) y la escena
+3D de three.js (~1.2 MB) que se baja después de cargar pero castiga
+tarifas de datos lentas. Hay también fricciones menores de foco en
+modales y en el menú desplegable del widget.
+
+2. HALLAZGOS
+--------------------------------------------------------------------
+
+[ALTO] U-01 — Logo de 1,15 MB sin optimizar (aparece 4 veces en index)
+Evidencia: https://res.cloudinary.com/dvo5crvec/image/upload/
+v1790899366/ISOTIPO_odzqtv.png pesa 1.153.367 bytes (verificado);
+se usa en navbar, footer, favicon y og:image.
+Impacto: con cobertura 3G rural (~1-3 Mbps), SOLO el logo puede
+consumir 3-8 segundos antes del primer render completo; además
+gasta datos del usuario. Es el mayor enemigo del LCP < 2.5s.
+Recomendación: Cloudinary transforma por URL sin tocar el original:
+  .../image/upload/f_auto,q_auto,w_240/ISOTIPO_odzqtv.png
+(≈15-30 KB). Mantener el original solo en og:image si se desea.
+Costo: cambiar 4 URLs, 10 minutos. Ganancia enorme.
+
+[ALTO] U-02 — three.module.js sin minificar (~1.2 MB) tras la carga
+Evidencia: public/js/hero3d.js línea 18 importa
+three@0.170.0/build/three.module.js (no la variante .min.js).
+Impacto: en datos lentos, ~1.2 MB extra tras el load; el usuario
+paga con su tarifa de datos una animación decorativa.
+Recomendación: (a) usar three.module.min.js (mitad de peso),
+(b) gate adicional: si navigator.connection.saveData === true o
+effectiveType es '2g'/'slow-2g', no inicializar el 3D. El hero sin
+partículas ya se ve elegante (fondo crema + collage).
+
+[MEDIO] U-03 — Preloader bloquea la interacción hasta 2.5 s
+Evidencia: public/js/intro.js — body overflow:hidden durante la
+intro; sin botón de saltar; solo se ejecuta una vez por sesión
+(sessionStorage), lo mitiga.
+Impacto: primera visita = 2.5 s obligatorios de espera estética.
+Recomendación: acortar a ~1.5 s en móvil (matchMedia
+(max-width:767px)) o agregar "saltar" tras 1 s. Bajo prioridad
+porque es una sola vez por sesión.
+
+[MEDIO] U-04 — Modales del widget sin trampa de foco completa
+Evidencia: public/js/widget.js abre modales y enfoca el botón
+cerrar, pero el Tab puede salir del modal hacia el fondo.
+Impacto: usuarios de teclado/lector de pantalla pueden
+"perderse" detrás del overlay.
+Recomendación: trap simple (keydown Tab → mantener el foco dentro
+del panel mientras esté abierto). ~15 líneas.
+
+[MEDIO] U-05 — role="menu" en el widget sin semántica de flechas
+Evidencia: #widget-menu usa role="menu" y role="menuitem"
+(index.html), pero no hay navegación con flechas arriba/abajo.
+Impacto: los lectores de pantalla anuncian "menú" y esperan
+comportamiento de menú nativo (flechas, Home/End); al no existir,
+la experiencia es inconsistente.
+Recomendación: o se implementan las flechas, o (más simple) se
+cambia role="menu"/"menuitem" por un contenedor normal con
+aria-label y botones normales (el comportamiento actual es de
+"lista de botones", no de menú).
+
+[MEDIO] U-06 — Sin sitemap ni robots.txt (descubrimiento)
+Evidencia: no existe public/robots.txt ni sitemap.xml.
+Impacto: Google puede indexar, pero el rastreo de un sitio nuevo
+sin dominio propio es más lento; la comunidad debería poder
+encontrar "certificados compartiendo arte" fácilmente.
+Recomendación: robots.txt + sitemap.xml con las 2 URLs + Search
+Console cuando exista dominio propio.
+
+[BAJO] U-07 — FAB del widget siempre con etiqueta en móvil
+Evidencia: .widget-contacto__fab muestra el texto "Contáctanos"
+también en 360px (~160px de ancho).
+Impacto: puede tapar contenido del footer/última sección.
+Recomendación: ocultar el span bajo 480px (queda el icono), o
+reducir padding.
+
+[BAJO] U-08 — Letra "A" dorada del preloader con contraste 1.86:1
+Evidencia: .letra--a color #e7ac23 sobre papel #f0efed
+(estiloweb.md §8: 1.86:1 — prohibido como texto).
+Impacto: es marca decorativa de gran tamaño (56-88px), no texto
+de lectura; el riesgo real es mínimo, pero la "A" se percibe débil.
+Recomendación: subir a #bd781b (dorado tierra, 3.58:1, pasa para
+texto grande) o mantener si se acepta como marca.
+
+[BAJO] U-09 — Entrada del certificado sin aria-describedby
+Evidencia: #certificados-doc tiene label, pero la ayuda ("Ingresa
+el número de documento...") no está asociada.
+Recomendación: id en el <p> de ayuda + aria-describedby en el
+input. 2 líneas.
+
+[BAJO] U-10 — Sin botón "volver arriba" ni breadcrumb en políticas
+Impacto: mínimo en una one-page; en politicas.html (texto legal
+largo) un volver-arriba sería un gesto amable.
+
+3. LO QUE ESTÁ BIEN HECHO (fortalezas honestas)
+--------------------------------------------------------------------
+- Mobile-first real: probado sin scroll horizontal a 360px, menú
+  hamburguesa a pantalla completa, safe-area de iOS respetada en
+  el widget (env(safe-area-inset-bottom)).
+- Accesibilidad: skip-link, focus-visible de 3px, aria-expanded en
+  toggles, aria-live en el resultado de certificados, Esc cierra
+  menú y modales, prefers-reduced-motion desactiva TODO (preloader,
+  3D, reveals, pulso del FAB) — cobertura completa.
+- Contraste: todas las combinaciones texto/fondo provienen de la
+  tabla verificada WCAG de estiloweb.md; la palabra del titular en
+  gradiente usa duotono azul→rojo (10.2:1 / 5.1:1) — decisión
+  correcta documentada.
+- Estados vacíos: galería, Tally, asistente IA y descargas RTE
+  explican "en preparación" sin romper la confianza y siempre
+  ofrecen alternativa (WhatsApp/correo).
+- Formulario de certificados: validación en vivo (solo dígitos),
+  estados de carga/no encontrado/error claros y neutros, ayuda
+  textual debajo del campo.
+- El 3D se pausa cuando el hero sale del viewport
+  (IntersectionObserver) y se inicializa después de load.
+
+4. PLAN DE ACCIÓN PRIORIZADO
+--------------------------------------------------------------------
+1. [U-01] Optimizar logo por URL de Cloudinary — 10 min — impacto
+   directo en la audiencia rural (¡hacer primero!).
+2. [U-02] three.module.min.js + gate saveData/2g — 15 min.
+3. [U-04] trampa de foco en modales — 15 min.
+4. [U-05] corregir roles del widget o implementar flechas — 10 min.
+5. [U-06] robots.txt + sitemap.xml — 10 min.
+6. [U-07][U-08][U-09][U-10] — 30 min en conjunto.
+
+5. NOTA FINAL
+--------------------------------------------------------------------
+La base UX es sólida y consciente de la audiencia. Las dos
+correcciones de peso (logo y three.js) son de minutos, no de días:
+con U-01 y U-02 aplicadas, el sitio queda honesto con el usuario
+rural que paga cada MB de sus datos.
+====================================================================

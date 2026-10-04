@@ -1,0 +1,163 @@
+====================================================================
+REPORTE DE REVISIÓN DE CÓDIGO — SITIO COMPARTIENDO ARTE
+Fecha: 2026-10-03 | Revisor: revisión manual con evidencia de código
+Alcance: wrangler.jsonc, package.json, src/worker.js, public/index.html,
+public/politicas.html, public/css/styles.css, public/js/*.js (11 módulos), README.md
+Restricción de arquitectura respetada: JavaScript puro modular SIN frameworks
+es una decisión deliberada del cliente — ninguna recomendación de migrar.
+====================================================================
+
+1. RESUMEN EJECUTIVO
+--------------------------------------------------------------------
+La base de código es limpia, pequeña (~13 archivos front + 1 Worker) y
+coherente con la decisión de vanilla JS: módulos con initIdempotente,
+guardas de existencia de elementos, configuración centralizada y un
+README honesto. La deuda real se concentra en tres puntos: (1) DRY en
+el HTML — el SVG de WhatsApp y el bloque widget/modales se duplican
+entre index y politicas, y hay 7 URLs de wa.me hardcodeadas pese a que
+config.js se declaró "fuente única de verdad"; (2) el render con
+innerHTML de datos de la API en certificados.js (compartido con el
+reporte de seguridad); y (3) ausencia total de automatización de
+calidad (no hay lint, ni script de verificación, ni pre-commit) que en
+un proyecto sin build ni tests es la red de seguridad mínima.
+
+2. HALLAZGOS
+--------------------------------------------------------------------
+
+[ALTO] C-01 — Violación de DRY estructural: widget/modales duplicados
+Evidencia: index.html y politicas.html contienen el mismo bloque
+widget (FAB + 3 opciones) y los mismos 2 modales (~90 líneas por
+copia). El path SVG de WhatsApp (~1 KB) está inline 4 veces en index
+(nav, widget×2, donantes) y 2 en politicas.
+Impacto: cada cambio futuro del widget (p. ej. conectar Tally) exige
+editar 2+ archivos; riesgo de divergencia silenciosa.
+Recomendación (sin frameworks): mover widget+modales a
+public/js/widget-markup.js que exporte una función montarWidget() que
+inyecte el HTML en un <div id="widget-root"></div> presente en cada
+página; template literal único. Igual para el SVG de WhatsApp
+(constante WHATSAPP_ICON). Esrzo: 45 min, se paga solo.
+
+[ALTO] C-02 — config.js no es la fuente única de verdad real
+Evidencia: CONFIG.WHATSAPP_URL existe, pero index.html contiene 7
+URLs wa.me hardcodeadas (4 en servicios, 1 contacto, 1 widget, 1
+donantes) + 1 en politicas. TALLY_URL y AI_EMBED_URL sí se usan como
+placeholders.
+Impacto: cambiar el número de WhatsApp (¡pendiente confirmado por el
+cliente!) exigirá reemplazar en 8 puntos; si se olvida uno, el sitio
+queda inconsistente.
+Recomendación: (a) reemplazar href="#" + data-whatsapp en el HTML y
+alimentar los href desde config.js en initRedesSociales() o un
+initWhatsApp(); (b) mientras tanto, agregar comentario TODO visible.
+Esfuerzo: 30 min. Debe hacerse ANTES de que el cliente confirme el
+número definitivo.
+
+[ALTO] C-03 — innerHTML con datos de la API en certificados.js
+Evidencia: líneas 53/72/85/93 renderizan con innerHTML; la línea 72
+interpola ${cert.nombre} y ${cert.taller} sin escapar.
+Impacto: riesgo latente de XSS cuando la fuente de datos pase de
+Map demo a KV/D1 (detalle completo en reporte-ciberseguridad.txt
+H-02). Además, mezclar plantillas string con DOM hace difícil
+razonar sobre los estados.
+Recomendación: reconstruir con createElement/textContent, o
+escapeHtml() utilitaria compartida (public/js/util-dom.js).
+
+[MEDIO] C-04 — Rate limiter: Map sin purga de entradas vencidas
+Evidencia: src/worker.js líneas 10-47; solo se sobrescribe el bucket
+de la IP que vuelve a llegar; IPs que no regresan permanecen para
+toda la vida del isolate.
+Impacto: crecimiento de memoria no acotado en isolates longevos;
+limitación entre-isolates ya documentada en el propio código (bien).
+Recomendación: en cada invocación, purgar entradas con start vencido:
+  if (rateBuckets.size > 1000) rateBuckets.clear(); // o purga por tiempo
+Una línea, elimina la preocupación.
+
+[MEDIO] C-05 — three.module.js sin minificar
+Evidencia: hero3d.js línea 18 importa build/three.module.js (~1.2 MB)
+en lugar de build/three.module.min.js (~600 KB).
+Impacto: el doble de peso en red para el usuario móvil sin ningún
+beneficio (no hay debugging en producción).
+Recomendación: cambiar la URL a three.module.min.js. (Combinar con
+el gate saveData/2g propuesto en reporte-usabilidad.txt U-02.)
+
+[MEDIO] C-06 — Sin red de calidad automatizada
+Evidencia: package.json solo define dev/deploy; no hay lint,
+formato, ni script de verificación; los .js se validaron a mano con
+node --check durante el desarrollo.
+Impacto: en un pipeline sin build, un error de sintaxis o un HTML con
+ancla rota llega directo a producción.
+Recomendación mínima (cero dependencias nuevas):
+  "scripts": {
+    "check": "node scripts/check.mjs"
+  }
+scripts/check.mjs: (1) node --check de todos los .js, (2) parse de
+index.html/politicas.html con verificación de que cada href="#id"
+exista como id, (3) que cada archivo referenciado en <script>/<link>
+exista en public/. ~60 líneas, corre en <1 s, y se invoca antes de
+cada deploy. Es la mejor inversión de ingeniería de esta lista.
+
+[MEDIO] C-07 — README desactualizado tras el refactor a one-page
+Evidencia: README describe estructura y páginas; no menciona las
+secciones #donantes y #transparencia (agregadas en commit e10beb1).
+Impacto: documentación divergente del producto.
+Recomendación: actualizar mapa de secciones y nota de que donantes/
+transparencia son secciones (no páginas).
+
+[BAJO] C-08 — CSS muerto: .pagina-grid
+Evidencia: styles.css define .pagina-grid (usado solo por las
+páginas donantes.html/transparencia.html eliminadas en e10beb1).
+Recomendación: eliminar la regla y su media query.
+
+[BAJO] C-09 — resize sin debounce en hero3d.js
+Evidencia: listener de window resize llama a setSize directamente.
+Impacto: en móviles, cada frame de rotación del dispositivo puede
+disparar recálculos.
+Recomendación: debounce de 150-200 ms.
+
+[BAJO] C-10 — URL del logo repetida literal 5 veces
+Evidencia: la URL de Cloudinary está hardcodeada en index.html (4) y
+politicas.html (2) en lugar de consumir CONFIG.LOGO_URL.
+Recomendación: asignar src en init desde config.js (coherente con C-02).
+
+3. FORTALEZAS (qué está bien construido y por qué)
+--------------------------------------------------------------------
+- Arquitectura de módulos con guards: cada init*() valida existencia
+  de sus elementos antes de actuar — main.js es seguro en ambas
+  páginas. Buen patrón para vanilla JS.
+- hero3d.js: init diferido tras load, pausa con IntersectionObserver,
+  pixelRatio limitado, import dinámico con catch → fallback elegante
+  al hero estático. Rendimiento pensado.
+- intro.js: tope duro de 2.5 s con kill() de la timeline — el
+  preloader NUNCA puede dejar la página bloqueada. Antifragil.
+- worker.js: validación con regex estricto, respuestas JSON
+  uniformes, mensajes neutros anti-enumeración, TODO claro del
+  futuro binding KV/D1, comentarios honestos sobre limitaciones.
+- gsap.matchMedia() en scroll-anim.js con cleanup del listener
+  pointermove — uso correcto de la API moderna de GSAP.
+- CSS: tokens 100% definidos (el bug de --esp-5 quedó documentado
+  como lección), reduced-motion cubierto desde el reset global,
+  escala 4px consistente.
+- widget.js: cierre por Esc, clic exterior y foco al cerrar;
+  social.js: patrón de "deshabilitado con title" limpio y accesible.
+
+4. DEUDA TÉCNICA Y MEJORAS PROPUESTAS (priorizadas)
+--------------------------------------------------------------------
+| #  | Mejora                                  | Esfuerzo | Impacto |
+|----|-----------------------------------------|----------|---------|
+| 1  | C-02 unificar WhatsApp en config.js    | 30 min   | Alto    |
+|    |   (hacer ANTES del número definitivo)  |          |         |
+| 2  | C-03 DOM seguro en certificados.js      | 20 min   | Alto    |
+| 3  | C-06 script check.mjs + npm run check  | 1 h      | Alto    |
+| 4  | C-01 widget-markup.js (dedup HTML)      | 45 min   | Medio   |
+| 5  | C-04 purga de rateBuckets              | 5 min    | Medio   |
+| 6  | C-05 three.module.min.js               | 2 min    | Medio   |
+| 7  | C-07 README + C-08 CSS muerto +        | 20 min   | Bajo    |
+|    |   C-09 debounce + C-10 logo por config |          |         |
+
+5. NOTA FINAL
+--------------------------------------------------------------------
+Código de calidad para un proyecto de este tamaño: patrones
+correctos, defensivos y documentados. La prioridad 1 es C-02 por
+razón de negocio (el número de WhatsApp va a cambiar), la 2 es C-03
+por seguridad latente, y la 3 es C-06 porque da velocidad y
+confianza a TODO cambio futuro.
+====================================================================

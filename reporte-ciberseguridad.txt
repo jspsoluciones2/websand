@@ -1,0 +1,132 @@
+====================================================================
+REPORTE DE AUDITORÍA DE CIBERSEGURIDAD — SITIO WEB COMPARTIENDO ARTE
+Fecha: 2026-10-03 | Auditor: agente automático | Auditor: revisión manual con evidencia de código
+Alcance: public/index.html, public/politicas.html, public/js/*.js (11 módulos),
+src/worker.js, wrangler.jsonc, configuración HTTP de Cloudflare Workers
+URL: https://compartiendo-arte.sistemasclubtennis.workers.dev
+====================================================================
+
+1. RESUMEN EJECUTIVO
+--------------------------------------------------------------------
+El sitio presenta una postura de seguridad BUENA para su categoría
+(sitio estático sin autenticación, sin pagos, sin base de datos real):
+no hay secretos en el repositorio, la API valida su entrada, las
+respuestas son uniformes para evitar enumeración y todos los enlaces
+externos usan rel="noopener". Los puntos de mejora se concentran en
+tres frentes: (1) faltan cabeceras de seguridad HTTP (CSP sobre todo,
+dado que el sitio depende de 3 CDNs externos), (2) renderizado de
+datos de la API vía innerHTML sin escapar (defensa en profundidad),
+y (3) el limitador de peticiones en memoria tiene limitaciones
+conocidas y documentadas que conviene complementar con WAF.
+
+2. HALLAZGOS
+--------------------------------------------------------------------
+
+[ALTO] H-01 — Ausencia de cabeceras de seguridad HTTP (sin CSP)
+Evidencia: no existe public/_headers (verificado) y wrangler.jsonc
+no define cabeceras. El sitio depende de jsdelivr.net, api.fontshare.com
+y res.cloudinary.com.
+Impacto: sin Content-Security-Policy, un script inyectado por
+compromiso de cualquiera de los 3 CDNs ejecutaría sin restricciones.
+Tampoco hay X-Content-Type-Options, X-Frame-Options/FRAME-ANCESTORS,
+Referrer-Policy ni Permissions-Policy.
+Recomendación: crear public/_headers con CSP estricta:
+  Content-Security-Policy: default-src 'self'; script-src 'self'
+    https://cdn.jsdelivr.net; style-src 'self'
+    https://api.fontshare.com 'unsafe-inline'; font-src
+    https://api.fontshare.com; img-src 'self'
+    https://res.cloudinary.com data:; connect-src 'self';
+    frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+(Workers Assets sirve _headers automáticamente).
+
+[MEDIO] H-02 — innerHTML con datos de la API sin escapar
+Evidencia: public/js/certificados.js línea 72 renderiza
+${cert.nombre} y ${cert.taller} dentro de una plantilla innerHTML;
+líneas 85 y 93 interpolan ${datos.mensaje}.
+Impacto: HOY el origen de datos es un Map controlado por la
+Corporación (demo), por lo que no es explotable en este momento.
+Es un riesgo latente: cuando el Worker consuma KV/D1 con datos
+introducidos por terceros (o un dato contaminado), un certificado
+con nombre "<img src=x onerror=...>" ejecutaría JS en el dominio.
+Recomendación: construir el DOM con createElement + textContent,
+o una función escapeHtml() aplicada a todo campo de la API antes
+de interpolar. Costo: 15 minutos. Es la corrección más importante
+ANTES de conectar la fuente real de certificados.
+
+[MEDIO] H-03 — Limitador de peticiones en memoria: limitaciones
+Evidencia: src/worker.js líneas 10-47. El Map rateBuckets nunca
+elimina entradas expiradas de IPs que no vuelven a consultar
+(crecimiento no acotado dentro de la vida del isolado) y cada
+isolado de Cloudflare mantiene su propio Map, por lo que el límite
+de 10 req/min se reinicia entre instancias.
+Impacto: el endpoint permite enumeración asistida por script con
+algo de paciencia (aunque la respuesta uniforme limita la fuga de
+información — ver H-06 nota positiva).
+Recomendación: (a) limpiar buckets vencidos en cada invocación
+(bucle de purga simple), (b) regla WAF de Cloudflare con rate
+limiting por ruta /api/certificado — es la solución real y no
+tiene costo, (c) mantener el Map como capa de cortesía.
+
+[MEDIO] H-04 — Dependencias CDN sin Subresource Integrity (SRI)
+Evidencia: index.html carga gsap.min.js y ScrollTrigger.min.js
+desde jsdelivr sin atributo integrity (0 atributos detectados);
+hero3d.js importa three.module.js por URL (los import dinámicos
+no soportan SRI hoy).
+Impacto: compromiso de jsdelivr = ejecución de código arbitrario.
+La probabilidad es baja (jsdelivr es robusto), pero el costo de
+mitigación para los <script> es nulo.
+Recomendación: agregar integrity + crossorigin="anonymous" a los
+dos tags de GSAP (calcular hash con https://www.srihash.org).
+Para three.js, la mitigación real es la CSP (H-01) que restringe
+script-src a jsdelivr.
+
+[BAJO] H-05 — Robots y sitemap ausentes
+Evidencia: no existe public/robots.txt (verificado).
+Impacto: no es de seguridad, pero su ausencia combinada con
+og:image completo puede facilitar scraping automatizado sin
+política declarada.
+Recomendación: agregar robots.txt (permitir todo, señalar sitemap
+cuando exista) y no indexar politicas.html ya está resuelto con
+meta noindex.
+
+[BAJO] H-06 — Otros puntos revisados SIN hallazgo (constancias)
+- Secretos: escaneo del repo sin tokens ni credenciales (el PAT
+  de GitHub se usó solo por línea de comando, no está en archivos).
+- target="_blank": todos con rel="noopener" (verificado).
+- TLS: workers.dev sirve HTTPS por defecto con certificado de
+  Cloudflare.
+- Enumeración: respuesta idéntica estructuralmente para documento
+  existente/inexistente; el mensaje neutro no revela si el número
+  existe. Bien hecho.
+- CORS: el Worker no emite cabeceras CORS → otros orígenes no
+  pueden leer respuestas de la API.
+- Privacidad: sin cookies, sin analytics, sin trackers. La sesión
+  del preloader usa sessionStorage (efímero, no personal). Correcto
+  para trabajar con menores (Ley 1581).
+- Pendiente legal: cuando el formulario Tally y las fotos entren
+  en producción, verificar checkbox de consentimiento explícito
+  (la política v1.0 lo exige) — anotado como obligación futura.
+
+3. PLAN DE ACCIÓN PRIORIZADO
+--------------------------------------------------------------------
+1. [H-01] Crear public/_headers con CSP + cabeceras — 30 min — ALTO
+   impacto, cero riesgo.
+2. [H-02] escapar/DOM-seguro en certificados.js — 15 min — hacerlo
+   ANTES de conectar datos reales de certificados.
+3. [H-04] SRI en los dos <script> de GSAP — 10 min.
+4. [H-03] regla WAF de rate limit en el dashboard de Cloudflare —
+   15 min + purga de buckets en worker.js (10 min).
+5. [H-05] robots.txt — 5 min.
+
+4. NOTA FINAL
+--------------------------------------------------------------------
+Estado general: SATISFACTORIO con mejoras pendientes de bajo costo.
+El sitio fue diseñado con criterio (validación, respuestas neutras,
+noopener, cero cookies). Ninguna de las vulnerabilidades permite
+hoy robo de datos ni ejecución de código por un tercero sin un
+compromiso previo de un CDN. La acción de mayor valor es la CSP,
+que amortigua el riesgo de toda la cadena de suministro.
+====================================================================
