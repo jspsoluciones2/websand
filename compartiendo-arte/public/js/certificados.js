@@ -62,12 +62,12 @@ export function initCertificados() {
       ? `<a class="boton boton--dorado" href="${cert.url}" download target="_blank" rel="noopener">
            Descargar PDF
          </a>`
-      : `<button class="boton boton--deshabilitado" disabled title="Sistema de emisión en preparación">
+: `<button class="boton boton--deshabilitado" disabled title="Sistema de emisión en preparación">
            Descargar PDF
          </button>
-         <p style="font-size:.85rem; color:var(--gris); margin-top:var(--esp-2);">
-           El sistema de emisión de certificados está en preparación.
-         </p>`;
+         <p style="font-size:.85rem; color:var(--text-secondary); margin-top:var(--space-2);">
+            El sistema de emisión de certificados está en preparación.
+          </p>`;
 
     resultado.innerHTML = `
       <div class="certificado-tarjeta">
@@ -85,7 +85,7 @@ export function initCertificados() {
     resultado.innerHTML = `
       <div class="mensaje-estado mensaje-estado--info" role="status">
         <p>${mensaje}</p>
-        <p style="margin-top:var(--esp-2);"><a href="#contacto" style="color:var(--amarillo);">Contáctanos para recibir ayuda →</a></p>
+        <p style="margin-top:var(--space-2);"><a href="#contacto" style="color:var(--purple); font-weight:700;">Contáctanos para recibir ayuda →</a></p>
       </div>`;
   }
 

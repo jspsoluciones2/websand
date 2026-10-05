@@ -8,7 +8,7 @@ export function initNavbar() {
   const menuMovil = document.getElementById('menu-movil');
   if (!navbar) return;
 
-  // Elevated shadow when the pill scrolls with the page.
+  // Sombra sutil cuando la cabecera se despega del borde superior.
   window.addEventListener(
     'scroll',
     () => navbar.classList.toggle('desplazada', window.scrollY > 40),

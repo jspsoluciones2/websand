@@ -7,41 +7,29 @@
   <meta name="description" content="Corporación Artística y Cultural Compartiendo Arte en Norte de Santander. Rescatando tradiciones a través de la educación artística.">
   <meta property="og:title" content="Compartiendo Arte — Corporación Artística y Cultural">
   <meta property="og:description" content="Rescatando tradiciones a través de la educación artística en Norte de Santander.">
-  <meta property="og:image" content="https://res.cloudinary.com/dvo5crvec/image/upload/v1790899366/ISOTIPO_odzqtv.png">
+  <meta property="og:image" content="https://res.cloudinary.com/dvo5crvec/image/upload/f_auto,q_auto,w_240/ISOTIPO_odzqtv.png">
   <meta property="og:locale" content="es_CO">
   <meta property="og:type" content="website">
-  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dvo5crvec/image/upload/v1790899366/ISOTIPO_odzqtv.png">
-  <link rel="preconnect" href="https://api.fontshare.com">
-  <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&f[]=basier-circle@500,600,500i,600i&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dvo5crvec/image/upload/f_auto,q_auto,w_240/ISOTIPO_odzqtv.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-  <!-- Preloader / intro de primera visita -->
-  <div class="preloader" id="preloader" aria-hidden="true">
-    <div class="preloader__marca">
-      <span class="pre">Corporación Artística y Cultural</span>
-      <div class="palabra" aria-hidden="true">
-        <span class="letra letra--a">A</span><span class="letra letra--r">R</span><span class="letra letra--t">T</span><span class="letra letra--e">E</span>
-      </div>
-    </div>
-    <div class="preloader__linea"><div class="relleno" id="preloader-relleno"></div></div>
-    <span class="preloader__frase">Rescatando tradiciones a través de la educación artística</span>
-  </div>
-  <noscript><style>.preloader{display:none}</style></noscript>
-
-  <!-- ===== Nav píldora flotante ===== -->
-  <header class="nav-pill" id="navbar">
-    <a class="nav-pill__logo" href="#inicio" aria-label="Compartiendo Arte — inicio">
-      <img src="https://res.cloudinary.com/dvo5crvec/image/upload/v1790899366/ISOTIPO_odzqtv.png" alt="Logotipo de Compartiendo Arte" width="40" height="40">
+  <!-- ===== Cabecera institucional ===== -->
+  <header class="cabecera" id="navbar">
+    <a class="cabecera__logo" href="#inicio" aria-label="Compartiendo Arte — inicio">
+      <img src="https://res.cloudinary.com/dvo5crvec/image/upload/f_auto,q_auto,w_300/ISOTIPO_odzqtv.png" alt="Logotipo de Compartiendo Arte" width="44" height="44">
       <span class="texto">
         <strong>Compartiendo Arte</strong>
         <small>Norte de Santander</small>
       </span>
     </a>
     <nav aria-label="Navegación principal">
-      <ul class="nav-pill__enlaces" id="navbar-enlaces">
+      <ul class="cabecera__enlaces" id="navbar-enlaces">
         <li><a href="#inicio" class="activo">Inicio</a></li>
         <li><a href="#sobrenosotros">Sobre Nosotros</a></li>
         <li><a href="#servicios">Servicios</a></li>
@@ -52,9 +40,9 @@
         <li><a href="#contacto">Contacto</a></li>
       </ul>
     </nav>
-    <div class="nav-pill__acciones">
-      <a class="boton boton--firma nav-pill__cta" href="#contacto">Contáctanos</a>
-      <button class="nav-pill__hamburguesa" id="hamburguesa" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú de navegación">
+    <div class="cabecera__acciones">
+      <a class="boton boton--firma cabecera__cta" href="#contacto">Contáctanos</a>
+      <button class="cabecera__hamburguesa" id="hamburguesa" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú de navegación">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -75,58 +63,54 @@
 
   <main id="contenido">
 
-    <!-- ===== Hero — mural de recuerdos ===== -->
+    <!-- ===== Hero — carrusel de imágenes a sangre ===== -->
     <section class="hero" id="inicio" aria-label="Presentación">
-      <div class="hero__fondo" id="hero-fondo" hidden>
-        <canvas id="hero-canvas" aria-hidden="true"></canvas>
-      </div>
+      <div class="hero__slider" id="hero-slider" role="group" aria-roledescription="carrusel" aria-label="Imágenes destacadas de Compartiendo Arte" tabindex="-1">
+        <div class="hero__slides">
+          <figure class="hero__slide es-activa" aria-hidden="false">
+            <img src="https://res.cloudinary.com/dvr2fk8w8/image/upload/f_auto,q_auto,c_limit,w_2000/Descubre_tu_talento_transforma_tu_mundo_ppdb3a.png" alt="Descubre tu talento, transforma tu mundo: imagen de presentación de los procesos de formación artística." width="2000" height="1125" decoding="async" fetchpriority="high" loading="eager">
+          </figure>
+          <figure class="hero__slide" aria-hidden="true">
+            <img src="https://res.cloudinary.com/dvr2fk8w8/image/upload/f_auto,q_auto,c_limit,w_2000/Gemini_Generated_Image_exah8gexah8gexah_daoeuq.jpg" alt="Imagen destacada de los talleres y actividades culturales de la Corporación." width="2000" height="1125" decoding="async" loading="lazy">
+          </figure>
+          <figure class="hero__slide" aria-hidden="true">
+            <img src="https://res.cloudinary.com/dvr2fk8w8/image/upload/f_auto,q_auto,c_limit,w_2000/ChatGPT_Image_5_oct_2026_10_18_45_a.m._wwwl3y.png" alt="Imagen destacada del trabajo de la Corporación con niños, niñas, adolescentes, jóvenes y adultos mayores." width="2000" height="800" decoding="async" loading="lazy">
+          </figure>
+        </div>
 
-      <div class="hero__collage" aria-hidden="true">
-        <div class="polaroid polaroid--musica" data-profundo="0.6">
-          <div class="polaroid__icono">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
-          </div>
-          <span>Música</span>
-        </div>
-        <div class="polaroid polaroid--danza" data-profundo="1">
-          <div class="polaroid__icono">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2.5"></circle><path d="M12 8v5"></path><path d="M12 9.5 6 13"></path><path d="M12 8.5l5-2.5"></path><path d="M12 13l-3.5 7.5"></path><path d="M12 13l4 6.5"></path></svg>
-          </div>
-          <span>Danza</span>
-        </div>
-        <div class="polaroid polaroid--teatro" data-profundo="0.8">
-          <div class="polaroid__icono">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8 10.5c.5.8 1.2 1.2 2 1.2s1.5-.4 2-1.2"></path><path d="M14 13c.8.8 1.8 1.2 2.8 1.1"></path><path d="M9 16.5c1 .8 2 1.2 3 1.2s2-.4 3-1.2"></path><path d="M8 8.5 10 8"></path></svg>
-          </div>
-          <span>Teatro</span>
-        </div>
-        <div class="polaroid polaroid--pintura" data-profundo="1.2">
-          <div class="polaroid__icono">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-          </div>
-          <span>Pintura</span>
-        </div>
-      </div>
+        <div class="hero__overlay" aria-hidden="true"></div>
 
-      <div class="contenedor hero__contenido">
-        <span class="etiqueta-pill etiqueta-pill--celeste hero__etiqueta">Corporación Artística y Cultural</span>
-        <h1>Rescatando tradiciones a través <span class="palabra-gradiente">del arte</span></h1>
-        <p class="hero__eslogan">Formación artística y cultural con enfoque de género e inclusión, para niños, niñas, adolescentes, jóvenes y adultos mayores del Norte de Santander.</p>
-        <div class="hero__acciones">
-          <a class="boton boton--firma" href="#contacto">Contáctanos</a>
-          <a class="boton boton--fantasma" href="#sobrenosotros">Conócenos →</a>
+        <div class="hero__contenido">
+          <span class="etiqueta-pill etiqueta-pill--celeste hero__etiqueta">Corporación Artística y Cultural</span>
+          <h1>Rescatando tradiciones a través <span class="palabra-acento">del arte</span></h1>
+          <p class="hero__eslogan">Formación artística y cultural con enfoque de género e inclusión, para niños, niñas, adolescentes, jóvenes y adultos mayores del Norte de Santander.</p>
+          <div class="hero__acciones">
+            <a class="boton boton--firma" href="#contacto">Contáctanos</a>
+            <a class="boton boton--fantasma" href="#sobrenosotros">Conócenos →</a>
+          </div>
+          <div class="hero__tira-artes" aria-hidden="true">
+            <span class="chip-arte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>Música</span>
+            <span class="chip-arte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2.5"></circle><path d="M12 8v5"></path><path d="M12 13l-3.5 7.5"></path><path d="M12 13l4 6.5"></path></svg>Danza</span>
+            <span class="chip-arte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9 16.5c1 .8 2 1.2 3 1.2s2-.4 3-1.2"></path></svg>Teatro</span>
+            <span class="chip-arte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>Pintura</span>
+          </div>
         </div>
-        <div class="hero__tira-artes" aria-hidden="true">
-          <span class="chip-arte chip-arte--musica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>Música</span>
-          <span class="chip-arte chip-arte--danza"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2.5"></circle><path d="M12 8v5"></path><path d="M12 13l-3.5 7.5"></path><path d="M12 13l4 6.5"></path></svg>Danza</span>
-          <span class="chip-arte chip-arte--teatro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9 16.5c1 .8 2 1.2 3 1.2s2-.4 3-1.2"></path></svg>Teatro</span>
-          <span class="chip-arte chip-arte--pintura"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>Pintura</span>
+
+        <div class="hero__controles">
+          <button class="hero__flecha hero__flecha--anterior" type="button" aria-label="Imagen anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <div class="hero__barras" role="group" aria-label="Seleccionar imagen del carrusel"></div>
+          <button class="hero__flecha hero__flecha--siguiente" type="button" aria-label="Imagen siguiente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
         </div>
+
+        <a class="hero__indicador" href="#sobrenosotros" aria-label="Bajar a la siguiente sección">
+          <span>Descubre</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </a>
       </div>
-      <a class="hero__indicador" href="#sobrenosotros" aria-label="Bajar a la siguiente sección">
-        <span>Descubre</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </a>
     </section>
 
     <!-- ===== Sobre Nosotros ===== -->
@@ -134,7 +118,7 @@
       <div class="contenedor">
         <div class="cabecera-seccion">
           <span class="etiqueta-pill etiqueta-pill--menta">Quiénes somos</span>
-          <h2 id="titulo-sobre" style="margin-top:16px;">Una corporación que <span class="palabra-gradiente">transforma</span> vidas</h2>
+          <h2 id="titulo-sobre">Una corporación que <span class="palabra-acento">transforma</span> vidas</h2>
           <p class="eslogan">Somos una entidad sin ánimo de lucro constituida en 2021, dedicada a la enseñanza, promoción y fortalecimiento de las expresiones artísticas y culturales en las comunidades rurales de Norte de Santander, con enfoque de género e inclusión.</p>
         </div>
 
@@ -151,7 +135,7 @@
           </article>
         </div>
 
-        <h3 style="text-align:center; margin-block:64px 32px; font-size:1.4rem;">Nuestros valores</h3>
+        <h3 class="titulo-bloque">Nuestros valores</h3>
         <div class="grid grid-valores">
           <article class="tarjeta tarjeta--valor reveal">
             <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
@@ -192,7 +176,7 @@
       <div class="contenedor">
         <div class="cabecera-seccion">
           <span class="etiqueta-pill etiqueta-pill--melocoton">Qué hacemos</span>
-          <h2 id="titulo-servicios" style="margin-top:16px;">Talleres que <span class="palabra-gradiente">despiertan</span> talentos</h2>
+          <h2 id="titulo-servicios">Talleres que <span class="palabra-acento">despiertan</span> talentos</h2>
           <p class="eslogan">Procesos formativos en las cuatro artes de nuestro isotipo.</p>
         </div>
         <!-- TODO: contenido real de servicios pendiente del cliente -->
@@ -230,7 +214,7 @@
       <div class="contenedor">
         <div class="cabecera-seccion">
           <span class="etiqueta-pill etiqueta-pill--celeste">Memorias</span>
-          <h2 id="titulo-galeria" style="margin-top:16px;">Nuestro mural de <span class="palabra-gradiente">recuerdos</span></h2>
+          <h2 id="titulo-galeria">Nuestro mural de <span class="palabra-acento">recuerdos</span></h2>
           <p class="eslogan">Momentos de nuestros talleres y actividades.</p>
         </div>
         <div class="galeria__grid" id="galeria-grid"></div>
@@ -243,11 +227,11 @@
       <div class="contenedor">
         <div class="cabecera-seccion">
           <span class="etiqueta-pill etiqueta-pill--rojo">Certificados</span>
-          <h2 id="titulo-certificados" style="margin-top:16px;">Consulta tu <span class="palabra-gradiente">certificado</span></h2>
+          <h2 id="titulo-certificados">Consulta tu <span class="palabra-acento">certificado</span></h2>
           <p class="eslogan">Ingresa tu número de documento y descarga tu certificado de participación en PDF.</p>
         </div>
         <div class="certificados__consulta">
-          <div class="tarjeta" style="padding:var(--esp-8);">
+          <div class="tarjeta certificados__panel">
             <form class="certificados__form" id="certificados-form" novalidate>
               <div class="certificados__campo">
                 <label for="certificados-doc">Número de documento</label>
@@ -270,7 +254,7 @@
       <div class="contenedor">
         <div class="cabecera-seccion">
           <span class="etiqueta-pill etiqueta-pill--melocoton">Apóyanos</span>
-          <h2 id="titulo-donantes" style="margin-top:16px;">Módulo para Donantes e <span class="palabra-gradiente">Incentivos Tributarios</span></h2>
+          <h2 id="titulo-donantes">Módulo para Donantes e <span class="palabra-acento">Incentivos Tributarios</span></h2>
           <p class="eslogan">Esta sección está diseñada específicamente para atraer y guiar a las empresas o personas interesadas en donar a nuestra causa.</p>
         </div>
 
@@ -283,13 +267,13 @@
           </article>
           <article class="tarjeta tarjeta--vision reveal">
             <div class="tarjeta__icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg></div>
-            <span class="etiqueta-pill etiqueta-pill--menta" style="margin-bottom:12px;">Art. 257 · Estatuto Tributario</span>
+            <span class="etiqueta-pill etiqueta-pill--menta etiqueta-card">Art. 257 · Estatuto Tributario</span>
             <h3>Beneficios Tributarios</h3>
             <p>Tu solidaridad también te beneficia. Te brindamos toda la información necesaria sobre el certificado de donación y el descuento aplicable en la declaración de renta, conforme al artículo 257 del Estatuto Tributario.</p>
           </article>
         </div>
 
-        <div class="panel-placeholder reveal" id="donacion-form-container" style="margin-top:var(--esp-8);">
+        <div class="panel-placeholder reveal" id="donacion-form-container">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
           <h4>Formulario de Intención de Donación</h4>
           <p>Diligencia este formulario breve con los datos de tu empresa o de tu persona antes de efectuar la donación. Muy pronto estará disponible aquí; mientras tanto, escríbenos directamente:</p>
@@ -307,7 +291,7 @@
       <div class="contenedor">
         <div class="cabecera-seccion">
           <span class="etiqueta-pill etiqueta-pill--celeste">Régimen Tributario Especial</span>
-          <h2 id="titulo-transparencia" style="margin-top:16px;">Transparencia y <span class="palabra-gradiente">Documentos</span></h2>
+          <h2 id="titulo-transparencia">Transparencia y <span class="palabra-acento">Documentos</span></h2>
           <p class="eslogan">En cumplimiento de la ley y para mantener la confianza de nuestros donantes y aliados, presentamos los documentos PDF obligatorios del Régimen Tributario Especial (requisito legal RTE / DIAN).</p>
         </div>
 
@@ -353,7 +337,7 @@
             <button class="boton boton--deshabilitado" disabled title="Documento en preparación">Documento en preparación</button>
           </article>
         </div>
-        <p style="margin-top:var(--esp-10); font-size:.9rem; color:var(--tinta-suave); text-align:center;">¿Necesitas un documento que no aparece aquí? Escríbenos a <a href="mailto:corpocarte@gmail.com">corpocarte@gmail.com</a> y con gusto te lo haremos llegar.</p>
+        <p class="transparencia__nota">¿Necesitas un documento que no aparece aquí? Escríbenos a <a href="mailto:corpocarte@gmail.com">corpocarte@gmail.com</a> y con gusto te lo haremos llegar.</p>
       </div>
     </section>
 
@@ -362,7 +346,7 @@
       <div class="contenedor">
         <div class="cabecera-seccion">
           <span class="etiqueta-pill etiqueta-pill--menta">Hablemos</span>
-          <h2 id="titulo-contacto" style="margin-top:16px;">Escríbenos, con gusto te <span class="palabra-gradiente">responderemos</span></h2>
+          <h2 id="titulo-contacto">Escríbenos, con gusto te <span class="palabra-acento">responderemos</span></h2>
         </div>
         <div class="contacto__grid">
           <!-- Formulario Tally (placeholder hasta tener el código definitivo) -->
@@ -378,7 +362,7 @@
             <div id="tally-form-container" hidden></div>
           </div>
           <div class="tarjeta contacto__tarjeta">
-            <h3 style="margin-bottom:var(--esp-4);">Datos de contacto</h3>
+            <h3>Datos de contacto</h3>
             <div class="contacto__item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               <div><strong>Dirección</strong><span>Km 14, Vereda Agua Blanca, Vía Puerto Santander, Cúcuta, Norte de Santander</span></div>
@@ -395,8 +379,8 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg>
               <div><strong>NIT</strong><span>901.527.000-1</span></div>
             </div>
-            <div>
-              <strong style="font-size:.85rem; letter-spacing:.06em; text-transform:uppercase; color:var(--tinta-suave); display:block; margin-bottom:var(--esp-3);">Redes sociales</strong>
+            <div class="contacto__redes">
+              <strong>Redes sociales</strong>
               <div class="redes-sociales" aria-label="Redes sociales">
                 <a href="#" data-red-social="tiktok" aria-label="TikTok">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path></svg>
@@ -418,14 +402,14 @@
     </section>
   </main>
 
-  <!-- ===== Footer minimal ===== -->
+  <!-- ===== Footer ===== -->
   <footer class="footer">
     <div class="contenedor">
       <div class="footer__grid">
         <div>
-          <img src="https://res.cloudinary.com/dvo5crvec/image/upload/v1790899366/ISOTIPO_odzqtv.png" alt="Logotipo de Compartiendo Arte" width="56" height="56">
-          <p style="font-size:.95rem; color:var(--tinta-suave);">Corporación Artística y Cultural sin ánimo de lucro. Rescatando tradiciones a través de la educación artística.</p>
-          <div class="redes-sociales" style="margin-top:var(--esp-4);" aria-label="Redes sociales">
+          <img src="https://res.cloudinary.com/dvo5crvec/image/upload/f_auto,q_auto,w_300/ISOTIPO_odzqtv.png" alt="Logotipo de Compartiendo Arte" width="60" height="60">
+          <p>Corporación Artística y Cultural sin ánimo de lucro. Rescatando tradiciones a través de la educación artística.</p>
+          <div class="redes-sociales" aria-label="Redes sociales">
             <a href="#" data-red-social="tiktok" aria-label="TikTok">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path></svg>
             </a>
@@ -511,7 +495,7 @@
   <div class="widget-modal" id="modal-correo" role="dialog" aria-modal="true" aria-labelledby="modal-correo-titulo">
     <div class="widget-modal__panel">
       <div class="widget-modal__cabecera">
-        <h3 id="modal-correo-titulo">Escríbenos</h3>
+        <h3 id="modal-correo-titulo">Escrívenos</h3>
         <button class="widget-modal__cerrar" data-cerrar-modal aria-label="Cerrar ventana">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -534,8 +518,6 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

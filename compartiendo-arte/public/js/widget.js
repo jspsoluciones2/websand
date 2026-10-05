@@ -9,7 +9,6 @@ export function initWidget() {
   if (!fab || !menu) return;
 
   const modales = Array.from(document.querySelectorAll('.widget-modal'));
-  const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let menuAbierto = false;
 
@@ -69,17 +68,4 @@ export function initWidget() {
       alternarMenu(false);
     }
   });
-
-  // Subtle attention pulse on the FAB (skipped for reduced motion).
-  if (!reducirMovimiento && window.gsap) {
-    window.gsap.to(fab, {
-      scale: 1.06,
-      duration: 0.5,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-      repeatDelay: 6,
-      delay: 6,
-    });
-  }
 }
