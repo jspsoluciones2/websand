@@ -376,27 +376,33 @@ a:hover { color: var(--purple-deep); }
 }
 .chip-arte svg { width: 16px; height: 16px; color: var(--yellow); }
 
-/* Controles del carrusel */
-.hero__controles {
-  position: absolute; z-index: 3;
-  right: max(20px, calc((100% - var(--ancho-pagina)) / 2));
-  bottom: var(--space-6);
-  display: flex; align-items: center; gap: var(--space-3);
-}
+/* Controles del carrusel: flechas a los lados, centradas verticalmente.
+   Mismo patron que el carrusel de mincultura.gov.co medido en produccion:
+   control a 16px de cada borde y alineado al eje vertical de la imagen. */
+.hero__controles { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 
 .hero__flecha {
-  width: 44px; height: 44px;
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 56px; height: 56px;
   display: grid; place-items: center;
   border: 1px solid rgba(255, 255, 255, .55);
   border-radius: var(--radius-sm);
   background: rgba(0, 0, 0, .32);
   color: var(--white); cursor: pointer;
+  pointer-events: auto;
   transition: background-color var(--transition), border-color var(--transition);
 }
+.hero__flecha--anterior { left: max(20px, calc((100% - var(--ancho-pagina)) / 2)); }
+.hero__flecha--siguiente { right: max(20px, calc((100% - var(--ancho-pagina)) / 2)); }
 .hero__flecha:hover { background: rgba(0, 0, 0, .58); border-color: var(--white); }
-.hero__flecha svg { width: 22px; height: 22px; }
+.hero__flecha svg { width: 26px; height: 26px; }
 
-.hero__barras { display: flex; align-items: center; gap: var(--space-2); }
+/* Indicadores al centro inferior: liberan por completo la esquina del boton de contacto */
+.hero__barras {
+  position: absolute; pointer-events: auto;
+  bottom: var(--space-6); left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: var(--space-2);
+}
 .hero__barra {
   width: 26px; height: 4px; padding: 0;
   border: none; border-radius: 2px;
@@ -824,9 +830,11 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   .hero__acciones { margin-bottom: var(--space-5); }
   .hero__tira-artes { display: none; }
 
-  .hero__controles { bottom: var(--space-4); right: var(--space-4); gap: var(--space-2); }
-  .hero__flecha { width: 38px; height: 38px; }
-  .hero__flecha svg { width: 18px; height: 18px; }
+  .hero__flecha--anterior { left: var(--space-3); }
+  .hero__flecha--siguiente { right: var(--space-3); }
+  .hero__flecha { width: 48px; height: 48px; }
+  .hero__flecha svg { width: 22px; height: 22px; }
+  .hero__barras { bottom: var(--space-4); }
   .hero__barra { width: 18px; }
   .hero__barra.es-activa { width: 28px; }
   .hero__indicador { bottom: var(--space-4); left: var(--space-4); font-size: 11px; }
