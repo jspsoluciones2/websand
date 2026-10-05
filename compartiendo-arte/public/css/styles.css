@@ -832,7 +832,9 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 
   .hero__flecha--anterior { left: var(--space-3); }
   .hero__flecha--siguiente { right: var(--space-3); }
-  .hero__flecha { width: 48px; height: 48px; }
+  /* En movil el texto del hero ocupa de y=157 a y=504: centrar las flechas
+     las pondria encima del eslogan, asi que van arriba, en la banda libre. */
+  .hero__flecha { top: var(--space-4); transform: none; width: 48px; height: 48px; }
   .hero__flecha svg { width: 22px; height: 22px; }
   .hero__barras { bottom: var(--space-4); }
   .hero__barra { width: 18px; }
