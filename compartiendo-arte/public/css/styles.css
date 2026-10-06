@@ -845,6 +845,14 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   .ficha-legal div { grid-template-columns: 1fr; gap: 2px; }
 }
 
+/* ===== Tablet: el hero de 16/7 queda demasiado corto para su propio texto =====
+   Medido a 1009px: el hero mide 441px y el contenido ocupa de y=104 a y=526,
+   o sea que se sale 13px del banner y no deja banda libre para las flechas.
+   Con min-height el texto vuelve a caber y queda aire arriba para los controles. */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .hero__slider { aspect-ratio: auto; min-height: 660px; }
+}
+
 /* ===== Accesibilidad: reducción de movimiento (guía §35, §36) ===== */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
