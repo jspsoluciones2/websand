@@ -376,13 +376,15 @@ a:hover { color: var(--purple-deep); }
 }
 .chip-arte svg { width: 16px; height: 16px; color: var(--yellow); }
 
-/* Controles del carrusel: flechas a los lados, centradas verticalmente.
-   Mismo patron que el carrusel de mincultura.gov.co medido en produccion:
-   control a 16px de cada borde y alineado al eje vertical de la imagen. */
+/* Controles del carrusel: flechas a los laterales, como en mincultura.gov.co
+   (medido en produccion: control pegado al borde lateral de la imagen).
+   Se anclan arriba y no al centro vertical porque nuestro hero lleva texto
+   dentro: medido a 1366px el titular ocupa y 351-403 y a 360px el eslogan
+   y 311-421, o sea que centrar las flechas las pondria encima del texto. */
 .hero__controles { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 
 .hero__flecha {
-  position: absolute; top: 50%; transform: translateY(-50%);
+  position: absolute; top: var(--space-6);
   width: 56px; height: 56px;
   display: grid; place-items: center;
   border: 1px solid rgba(255, 255, 255, .55);
@@ -832,9 +834,7 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 
   .hero__flecha--anterior { left: var(--space-3); }
   .hero__flecha--siguiente { right: var(--space-3); }
-  /* En movil el texto del hero ocupa de y=157 a y=504: centrar las flechas
-     las pondria encima del eslogan, asi que van arriba, en la banda libre. */
-  .hero__flecha { top: var(--space-4); transform: none; width: 48px; height: 48px; }
+  .hero__flecha { top: var(--space-4); width: 48px; height: 48px; }
   .hero__flecha svg { width: 22px; height: 22px; }
   .hero__barras { bottom: var(--space-4); }
   .hero__barra { width: 18px; }
