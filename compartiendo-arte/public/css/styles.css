@@ -848,8 +848,10 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 /* ===== Tablet: el hero de 16/7 queda demasiado corto para su propio texto =====
    Medido a 1009px: el hero mide 441px y el contenido ocupa de y=104 a y=526,
    o sea que se sale 13px del banner y no deja banda libre para las flechas.
-   Con min-height el texto vuelve a caber y queda aire arriba para los controles. */
-@media (min-width: 768px) and (max-width: 1199px) {
+   El rango llega hasta 1319px porque el texto del hero mide ~421px mientras el
+   contenedor de contenido no supera su tope de 1280px (viewport 1320); a partir
+   de ahi el titular ocupa menos lineas y el 16/7 alcanza de nuevo. */
+@media (min-width: 768px) and (max-width: 1319px) {
   .hero__slider { aspect-ratio: auto; min-height: 660px; }
 }
 
