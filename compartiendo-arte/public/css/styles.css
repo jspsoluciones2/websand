@@ -836,7 +836,10 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   .hero__flecha--siguiente { right: var(--space-3); }
   .hero__flecha { top: var(--space-4); width: 48px; height: 48px; }
   .hero__flecha svg { width: 22px; height: 22px; }
-  .hero__barras { bottom: var(--space-4); }
+  /* El boton de contacto fijo ocupa los ultimos 70px de la pantalla (medido a
+     360x640: y 570-624, x 160-329), asi que los indicadores suben por encima
+     de esa franja para que no queden debajo. */
+  .hero__barras { bottom: 84px; }
   .hero__barra { width: 18px; }
   .hero__barra.es-activa { width: 28px; }
   .hero__indicador { bottom: var(--space-4); left: var(--space-4); font-size: 11px; }
