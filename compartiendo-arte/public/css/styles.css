@@ -518,6 +518,35 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 
 .galeria__nota { margin-top: var(--space-6); font-size: 14px; color: var(--text-secondary); text-align: center; }
 
+/* Filtros por categoría: botones rectangulares (sin cápsulas, guía §37),
+   apoyados en la paleta y los tokens existentes. */
+.galeria__filtros {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.galeria__filtro {
+  display: inline-flex; align-items: center;
+  min-height: 44px; padding: 10px 18px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--white); color: var(--text-primary);
+  font-family: inherit; font-size: 15px; font-weight: 700; line-height: 1.2;
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition),
+              border-color var(--transition);
+}
+.galeria__filtro:hover { border-color: var(--purple); background: var(--purple-tint); color: var(--purple); }
+.galeria__filtro[aria-pressed="true"] { background: var(--purple); border-color: var(--purple); color: var(--white); }
+
+/* Las tarjetas ocultas por el filtro salen del flujo del grid. */
+.galeria__item[hidden] { display: none; }
+
+/* Con GSAP activo, él controla el transform de las tarjetas; se desactiva la
+   transición CSS de transform para que no amortigüe cada frame. El resto de la
+   transición (box-shadow, border-color) se conserva. */
+.galeria--gsap .galeria__item { transition-property: box-shadow, border-color; }
+
 /* Lightbox */
 .lightbox {
   position: fixed; inset: 0; z-index: 2500;
