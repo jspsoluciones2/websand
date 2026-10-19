@@ -32,7 +32,7 @@ compartiendo-arte/
         ├── reveal.js       → revelado de bloques al entrar en pantalla
         ├── navbar.js       → navegación, scroll-spy y menú móvil
         ├── widget.js       → botón flotante de contacto y modales
-        ├── galeria.js      → galería de fotos (array FOTOS) + lightbox
+        ├── galeria.js      → galería de fotos reales + filtros, paginación y lightbox
         ├── social.js       → enlaces de redes sociales
         └── certificados.js → lógica de consulta de certificados
 ```
@@ -91,13 +91,29 @@ También hay contenedores preparados con comentarios en el HTML:
 
 ## Fotos de la galería
 
-Agregar entradas al array `FOTOS` en `public/js/galeria.js`:
+Las 53 fotografías reales del proceso formativo 2023 están declaradas en
+`public/js/config.js` como `GALERIA`, agrupadas por categoría en `CATEGORIAS`
+(clausura, vestuario e invitación). Los datos salen de `urlsIMG.csv`, que es un
+insumo local y **no se versiona**; para actualizar la galería se regenera ese
+array.
 
-```js
-{ src: 'img/taller.jpg', alt: 'Descripción de la foto', categoria: 'Danza' }
-```
+- Los `publicId` no llevan extensión, para que Cloudinary elija el mejor
+  formato (`f_auto`) al servir.
+- `urlMiniatura()` pide 600×450 con recorte centrado; `urlGrande()` pide la
+  versión de hasta 1600 px para el lightbox.
+- Los `alt` se componen con la frase de la categoría y la posición
+  ("… — fotografía 3 de 12"), porque el CSV no trae descripciones. Conviene
+  reemplazarlos por descripciones reales cuando el cliente las entregue.
 
-Mientras esté vacío se muestran tarjetas de marcador de posición.
+Comportamiento de `public/js/galeria.js`:
+
+- Se muestran 12 fotos por tanda y el botón "Ver más fotografías" destapa el
+  resto del filtro activo.
+- El lightbox navega solo las fotos visibles, atrapa el foco, acepta Escape y
+  flechas, muestra categoría y contador, y devuelve el foco a la tarjeta al
+  cerrar.
+- Las animaciones usan GSAP (CDN, `gsap` + `ScrollTrigger`). Si el CDN falla,
+  la galería se ve y funciona igual; `prefers-reduced-motion` las desactiva.
 
 ## Certificados
 
@@ -109,7 +125,7 @@ Mientras esté vacío se muestran tarjetas de marcador de posición.
 ## Notas de accesibilidad y rendimiento
 
 - Tipografía del sistema sustituida por una sola familia web (Nunito Sans), con `preconnect` a `fonts.googleapis.com` y `fonts.gstatic.com`.
-- Cero dependencias externas en tiempo de ejecución: ni CDN de terceros, ni librerías de animación 3D, ni motores de *scrolling*. Todo el movimiento es CSS + IntersectionObserver.
+- La única dependencia externa de tiempo de ejecución es GSAP (`gsap` + `ScrollTrigger`) desde jsDelivr, solo para la entrada y los fundidos de la galería. Es opcional por diseño: si el CDN falla, todo sigue funcionando. El resto del movimiento es CSS + IntersectionObserver.
 - Foco visible en todo el sitio (`:focus-visible`), enlace de salto al contenido y `aria-label` en todos los controles de icono.
 - El carrusel expone `role="group"` + `aria-roledescription="carrusel"`, y las imágenes inactivas quedan fuera del árbol de accesibilidad con `aria-hidden="true"`.
 - Las imágenes del hero declaran `width`/`height` para evitar CLS; la primera usa `loading="eager"` + `fetchpriority="high"` y las demás `loading="lazy"`.
@@ -118,7 +134,7 @@ Mientras esté vacío se muestran tarjetas de marcador de posición.
 
 ## Pendiente del cliente
 
-- Fotos reales de talleres para la galería (`FOTOS` en `galeria.js`).
+- Descripciones reales de cada fotografía para reemplazar los `alt` automáticos.
 - URLs definitivas de redes sociales (hoy los enlaces son `#`).
 - Número y mensaje definitivos de WhatsApp.
 - PDFs del Régimen Tributario Especial (`public/documentos/*.pdf`).

@@ -18,6 +18,9 @@ import { GALERIA, CATEGORIAS, urlMiniatura, urlGrande } from './config.js';
 
 const CONSULTA_MOVIMIENTO = '(prefers-reduced-motion: reduce)';
 
+/** Fotos que se muestran por tanda. Con 53 imágenes remotas conviene escalonar. */
+const POR_TANDA = 12;
+
 export function initGaleria() {
   const grid = document.getElementById('galeria-grid');
   if (!grid) return;
@@ -26,22 +29,20 @@ export function initGaleria() {
   const tarjetas = montarTarjetas(grid, fotos);
   const estado = {
     categoria: 'todas',
-    visibles: tarjetas.slice(),
+    coincidentes: tarjetas.slice(),
+    visibles: [],
     tarjetas,
     fotos,
+    limite: POR_TANDA,
     limpiarEntrada: () => {},
   };
 
   montarFiltros(estado);
   montarLightbox(grid, estado);
+  montarBotonMas(estado);
+  pintar(estado);
 
-  // Cuando GSAP toma el control del transform quitamos la transición CSS de
-  // transform para que no amortigüe cada frame; box-shadow y border-color se
-  // siguen transicionando por CSS.
-  if (gsapDisponible()) grid.classList.add('galeria--gsap');
-
-  estado.limpiarEntrada = animarEntrada(tarjetas);
-  animarHover(tarjetas);
+  estado.limpiarEntrada = animarEntrada(estado.visibles);
 }
 
 /** Devuelve la instancia de GSAP si el CDN cargó; si no, null. */
@@ -50,22 +51,51 @@ function gsapDisponible() {
 }
 
 /**
+ * Intercala las fotos de las distintas categorías (una de cada una por vuelta).
+ * El CSV agrupa por carpeta, así que sin esto "Todas" abría con doce fotos del
+ * mismo acto y la primera fila mostraba tres tomas casi idénticas.
+ */
+function intercalarPorCategoria(lista) {
+  const grupos = new Map();
+  lista.forEach((foto) => {
+    if (!grupos.has(foto.categoria)) grupos.set(foto.categoria, []);
+    grupos.get(foto.categoria).push(foto);
+  });
+
+  const colas = [...grupos.values()];
+  const orden = [];
+  let quedan = lista.length;
+  while (quedan > 0) {
+    colas.forEach((cola) => {
+      if (cola.length) {
+        orden.push(cola.shift());
+        quedan--;
+      }
+    });
+  }
+  return orden;
+}
+
+/**
  * Normaliza GALERIA y calcula, por foto, el alt con su posición dentro de la
  * categoría ("… — fotografía N de TOTAL").
  */
 function prepararFotos() {
+  const base = intercalarPorCategoria(GALERIA);
   const totales = {};
-  GALERIA.forEach((foto) => {
+  base.forEach((foto) => {
     totales[foto.categoria] = (totales[foto.categoria] || 0) + 1;
   });
 
   const contador = {};
-  return GALERIA.map((foto, indice) => {
+  return base.map((foto, indice) => {
     contador[foto.categoria] = (contador[foto.categoria] || 0) + 1;
     const categoria = CATEGORIAS.find((c) => c.id === foto.categoria);
     const frase = categoria ? categoria.fraseAlt : 'Proceso formativo 2023';
     return {
       indice,
+      // El publicId se conserva: sin él no se puede construir la URL de Cloudinary.
+      publicId: foto.publicId,
       categoria: foto.categoria,
       alt: `${frase} — fotografía ${contador[foto.categoria]} de ${totales[foto.categoria]}`,
     };
@@ -86,13 +116,17 @@ function montarTarjetas(grid, fotos) {
     boton.setAttribute('aria-label', `Ampliar fotografía: ${foto.alt}`);
 
     const img = document.createElement('img');
-    img.src = urlMiniatura(foto);
     img.alt = foto.alt;
     // Dimensiones intrínsecas de la miniatura: evitan el salto de layout (CLS).
     img.width = 600;
     img.height = 450;
     img.loading = 'lazy';
     img.decoding = 'async';
+    // El fundido se engancha antes de asignar src para no perder un load rápido
+    // (caché) ni el caso en que la imagen ya esté completa.
+    img.addEventListener('load', () => img.classList.add('cargada'), { once: true });
+    img.src = urlMiniatura(foto);
+    if (img.complete) img.classList.add('cargada');
 
     boton.appendChild(img);
     fragmento.appendChild(boton);
@@ -129,8 +163,10 @@ function montarFiltros(estado) {
     boton.addEventListener('click', () => {
       if (estado.categoria === opcion.id) return;
       estado.categoria = opcion.id;
+      estado.limite = POR_TANDA;
       botones.forEach((b) => b.setAttribute('aria-pressed', String(b === boton)));
-      aplicarFiltro(estado, opcion.id);
+      calcularCoincidentes(estado);
+      pintar(estado, { animar: true });
     });
 
     contenedor.appendChild(boton);
@@ -138,16 +174,64 @@ function montarFiltros(estado) {
   });
 }
 
-/** Muestra/oculta tarjetas según la categoría y hace un fade discreto. */
-function aplicarFiltro(estado, categoria) {
-  const visibles = [];
-  estado.tarjetas.forEach((tarjeta) => {
-    const coincide = categoria === 'todas' || tarjeta.dataset.categoria === categoria;
-    tarjeta.hidden = !coincide;
-    if (coincide) visibles.push(tarjeta);
-  });
-  estado.visibles = visibles;
+/** Recalcula el conjunto de tarjetas que corresponden a la categoría activa. */
+function calcularCoincidentes(estado) {
+  estado.coincidentes = estado.tarjetas.filter(
+    (tarjeta) => estado.categoria === 'todas' || tarjeta.dataset.categoria === estado.categoria
+  );
+}
 
+/**
+ * Pinta el estado: muestra la tanda actual, actualiza `estado.visibles` (que es
+ * lo que navega el lightbox) y sincroniza el botón "Ver más".
+ */
+function pintar(estado, { animar = false } = {}) {
+  // Se memoriza lo que ya estaba en pantalla: al destapar otra tanda solo
+  // animamos las nuevas, para que las anteriores no parpadeen.
+  const previas = new Set(estado.visibles);
+  const mostradas = [];
+
+  estado.tarjetas.forEach((tarjeta) => {
+    tarjeta.hidden = true;
+  });
+
+  estado.coincidentes.forEach((tarjeta, indice) => {
+    if (indice < estado.limite) {
+      tarjeta.hidden = false;
+      mostradas.push(tarjeta);
+    }
+  });
+
+  estado.visibles = mostradas;
+
+  const boton = document.getElementById('galeria-mas');
+  if (boton) {
+    const restantes = estado.coincidentes.length - mostradas.length;
+    boton.hidden = restantes <= 0;
+    boton.textContent = restantes > 0
+      ? `Ver más fotografías (${restantes})`
+      : 'Ver más fotografías';
+  }
+
+  if (animar) {
+    const nuevas = mostradas.filter((tarjeta) => !previas.has(tarjeta));
+    animarCambio(estado, nuevas.length ? nuevas : mostradas);
+  }
+}
+
+/** Monta el botón de paginación progresiva. */
+function montarBotonMas(estado) {
+  const boton = document.getElementById('galeria-mas');
+  if (!boton) return;
+
+  boton.addEventListener('click', () => {
+    estado.limite += POR_TANDA;
+    pintar(estado, { animar: true });
+  });
+}
+
+/** Fade corto al cambiar de filtro o al destapar otra tanda. */
+function animarCambio(estado, mostradas) {
   const gsap = gsapDisponible();
   if (!gsap) return;
 
@@ -158,7 +242,7 @@ function aplicarFiltro(estado, categoria) {
   if (window.matchMedia(CONSULTA_MOVIMIENTO).matches) return;
 
   gsap.fromTo(
-    visibles,
+    mostradas,
     { autoAlpha: 0 },
     { autoAlpha: 1, duration: 0.22, ease: 'power1.out', overwrite: true, clearProps: 'opacity,visibility' }
   );
@@ -185,7 +269,10 @@ function animarEntrada(tarjetas) {
       y: mover ? 18 : 0,
       duration: mover ? 0.5 : 0,
       ease: 'power2.out',
-      stagger: mover ? { amount: 0.6 } : 0,
+      stagger: mover ? { amount: 0.5 } : 0,
+      // Devuelve el control del transform al CSS para que el hover no pelee
+      // contra un transform inline que dejó GSAP.
+      clearProps: 'transform,opacity,visibility',
     };
 
     if (ScrollTrigger) {
@@ -202,21 +289,6 @@ function animarEntrada(tarjetas) {
   return () => mm.revert();
 }
 
-/** Micro-interacción de hover: solo un scale mínimo, dentro de 150–300 ms. */
-function animarHover(tarjetas) {
-  const gsap = gsapDisponible();
-  if (!gsap || window.matchMedia(CONSULTA_MOVIMIENTO).matches) return;
-
-  tarjetas.forEach((tarjeta) => {
-    tarjeta.addEventListener('pointerenter', () => {
-      gsap.to(tarjeta, { scale: 1.03, duration: 0.18, ease: 'power1.out', overwrite: 'auto' });
-    });
-    tarjeta.addEventListener('pointerleave', () => {
-      gsap.to(tarjeta, { scale: 1, duration: 0.18, ease: 'power1.out', overwrite: 'auto' });
-    });
-  });
-}
-
 /**
  * Lightbox accesible. Navega sobre las tarjetas visibles (respetando el filtro),
  * atrapa el foco mientras está abierto y lo devuelve al elemento que lo abrió.
@@ -227,26 +299,44 @@ function montarLightbox(grid, estado) {
   const btnCerrar = document.getElementById('lightbox-cerrar');
   const btnPrev = document.getElementById('lightbox-prev');
   const btnSig = document.getElementById('lightbox-sig');
+  const etiquetaCategoria = document.getElementById('lightbox-categoria');
+  const contador = document.getElementById('lightbox-contador');
   if (!lightbox || !imagen || !btnCerrar || !btnPrev || !btnSig) return;
 
   const enfocables = [btnCerrar, btnPrev, btnSig];
   let posicion = 0;
   let elementoFoco = null;
 
+  /** Nombre visible de la categoría a partir de su id. */
+  const nombreCategoria = (id) => {
+    const encontrada = CATEGORIAS.find((categoria) => categoria.id === id);
+    return encontrada ? encontrada.etiqueta : 'Galería';
+  };
+
+  /**
+   * `estado.visibles` guarda elementos del DOM (no índices), así que la foto se
+   * resuelve por su data-indice, que es la posición en `estado.fotos`.
+   */
+  const fotoDe = (tarjeta) => estado.fotos[Number(tarjeta.dataset.indice)];
+
   function precargar(destino) {
-    const indice = estado.visibles[destino];
-    if (indice === undefined) return;
+    const total = estado.visibles.length;
+    if (!total) return;
+    const tarjeta = estado.visibles[(destino + total) % total];
+    if (!tarjeta) return;
     const precarga = new Image();
-    precarga.src = urlGrande(estado.fotos[indice]);
+    precarga.src = urlGrande(fotoDe(tarjeta));
   }
 
   function mostrar(destino) {
     const total = estado.visibles.length;
     if (!total) return;
     posicion = (destino + total) % total;
-    const foto = estado.fotos[estado.visibles[posicion]];
+    const foto = fotoDe(estado.visibles[posicion]);
     imagen.src = urlGrande(foto);
     imagen.alt = foto.alt;
+    if (etiquetaCategoria) etiquetaCategoria.textContent = nombreCategoria(foto.categoria);
+    if (contador) contador.textContent = `${posicion + 1} de ${total}`;
     precargar(posicion - 1);
     precargar(posicion + 1);
   }

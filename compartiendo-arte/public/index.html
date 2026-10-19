@@ -219,6 +219,9 @@
         </div>
         <div class="galeria__filtros" id="galeria-filtros" role="group" aria-label="Filtrar fotografías por categoría"></div>
         <div class="galeria__grid" id="galeria-grid"></div>
+        <div class="galeria__mas">
+          <button type="button" class="boton boton--fantasma" id="galeria-mas" hidden>Ver más fotografías</button>
+        </div>
         <p class="galeria__nota">Las fotografías se publican conforme a las autorizaciones correspondientes, con protección reforzada de los datos de niños, niñas y adolescentes (Ley 1581 de 2012).</p>
       </div>
     </section>
@@ -513,9 +516,17 @@
   <!-- Lightbox de galería -->
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
     <button class="lightbox__cerrar" id="lightbox-cerrar" aria-label="Cerrar visor">✕</button>
-    <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="Imagen anterior">‹</button>
-    <img class="lightbox__imagen" id="lightbox-imagen" src="" alt="">
-    <button class="lightbox__nav lightbox__nav--sig" id="lightbox-sig" aria-label="Imagen siguiente">›</button>
+    <div class="lightbox__panel">
+      <img class="lightbox__imagen" id="lightbox-imagen" src="" alt="">
+      <div class="lightbox__controles">
+        <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="Imagen anterior">‹</button>
+        <p class="lightbox__pie">
+          <span class="lightbox__categoria" id="lightbox-categoria"></span>
+          <span class="lightbox__contador" id="lightbox-contador" aria-live="polite"></span>
+        </p>
+        <button class="lightbox__nav lightbox__nav--sig" id="lightbox-sig" aria-label="Imagen siguiente">›</button>
+      </div>
+    </div>
   </div>
 
   <!-- Scripts -->

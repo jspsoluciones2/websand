@@ -496,7 +496,7 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   aspect-ratio: 4 / 3;
   border: 1px solid var(--border); border-radius: var(--radius-md);
   cursor: pointer; padding: 0;
-  background: var(--white);
+  background: var(--surface);
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
 .galeria__item:hover {
@@ -504,7 +504,19 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   box-shadow: var(--shadow-soft);
   border-color: var(--purple-line);
 }
-.galeria__item img { width: 100%; height: 100%; object-fit: cover; }
+.galeria__item:focus-visible { box-shadow: var(--shadow-soft); border-color: var(--purple); }
+
+/* La imagen entra con un fundido corto cuando termina de descargarse: evita el
+   destello de recuadros blancos mientras Cloudinary responde. El zoom del hover
+   vive en la imagen (no en la tarjeta) para que el marco no se deforme. */
+.galeria__item img {
+  display: block;
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.galeria__item img.cargada { opacity: 1; }
+.galeria__item:hover img { transform: scale(1.04); }
 
 .galeria__item .marcador {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -539,23 +551,49 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 .galeria__filtro:hover { border-color: var(--purple); background: var(--purple-tint); color: var(--purple); }
 .galeria__filtro[aria-pressed="true"] { background: var(--purple); border-color: var(--purple); color: var(--white); }
 
-/* Las tarjetas ocultas por el filtro salen del flujo del grid. */
+/* Las tarjetas ocultas por el filtro o por la paginación salen del flujo. */
 .galeria__item[hidden] { display: none; }
 
-/* Con GSAP activo, él controla el transform de las tarjetas; se desactiva la
-   transición CSS de transform para que no amortigüe cada frame. El resto de la
-   transición (box-shadow, border-color) se conserva. */
-.galeria--gsap .galeria__item { transition-property: box-shadow, border-color; }
+/* Paginación progresiva: con 53 fotos remotas no tiene sentido volcarlas todas. */
+.galeria__mas { display: flex; justify-content: center; margin-top: var(--space-6); }
+.galeria__mas[hidden] { display: none; }
 
 /* Lightbox */
 .lightbox {
   position: fixed; inset: 0; z-index: 2500;
-  background: rgba(32, 28, 48, .94);
+  background: rgba(32, 28, 48, .97);
   display: none; align-items: center; justify-content: center;
   padding: var(--space-6);
 }
 .lightbox.abierto { display: flex; }
-.lightbox__imagen { max-width: min(92vw, 1000px); max-height: 82vh; border-radius: var(--radius-sm); }
+.lightbox__panel {
+  display: flex; flex-direction: column; align-items: center;
+  gap: var(--space-3);
+  max-width: min(92vw, 1000px);
+}
+.lightbox__imagen {
+  display: block;
+  max-width: 100%; max-height: 76vh;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, .06);
+}
+/* Los controles envuelven al pie; en escritorio las flechas se salen a los
+   laterales con posición absoluta y en móvil quedan alineadas bajo la foto. */
+.lightbox__controles {
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+.lightbox__pie {
+  display: flex; align-items: center; flex-wrap: wrap; justify-content: center;
+  gap: var(--space-3);
+  font-size: 14px; color: rgba(255, 255, 255, .78);
+}
+.lightbox__categoria {
+  font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--yellow);
+}
+.lightbox__contador { font-variant-numeric: tabular-nums; }
 .lightbox__cerrar, .lightbox__nav {
   position: absolute; width: 48px; height: 48px;
   border: 1px solid rgba(255, 255, 255, .45);
@@ -875,6 +913,17 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 
   .pagina-legal main { padding-block: var(--space-7) var(--space-8); }
   .ficha-legal div { grid-template-columns: 1fr; gap: 2px; }
+
+  /* Lightbox: a 390px las flechas laterales tapaban la fotografía, así que
+     pasan a una fila junto al pie, debajo de la imagen. */
+  .lightbox { padding: var(--space-5) var(--space-4); }
+  .lightbox__imagen { max-height: 62vh; }
+  .lightbox__controles { gap: var(--space-2); }
+  .lightbox__nav--prev,
+  .lightbox__nav--sig {
+    position: static; transform: none;
+    width: 44px; height: 44px;
+  }
 }
 
 /* ===== Tablet: el hero de 16/7 queda demasiado corto para su propio texto =====
