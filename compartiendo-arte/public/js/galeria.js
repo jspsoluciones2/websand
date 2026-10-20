@@ -1,14 +1,18 @@
 /**
  * Galería de fotografías reales del proceso formativo 2023.
  *
+ * Presentación: dos carriles horizontales que se desplazan en sentidos
+ * opuestos. Cada carril duplica su contenido para que el bucle no tenga
+ * costura, y se pausa cuando la sección sale de pantalla, al pasar el mouse o
+ * al llegar con el teclado (WCAG 2.2.2).
+ *
  * Responsabilidades:
- * - Construye las tarjetas (4:3 con object-fit: cover, alturas uniformes).
- * - Barra de filtros por categoría accesible (aria-pressed dentro de un group).
+ * - Reparte las fotos alternando posición entre los dos carriles.
+ * - Filtros por categoría que reconstruyen los carriles.
  * - Lightbox con teclado (Escape, flechas), focus trap, retorno de foco al
  *   botón que lo abrió y precarga de las imágenes vecinas.
- * - Animaciones GSAP discretas y opcionales. Si el CDN de GSAP no carga, la
- *   galería se ve y funciona igual: el estado oculto solo lo aplica gsap.from()
- *   y nunca el CSS.
+ * - El movimiento de los carriles es CSS; GSAP solo aporta el revelado de
+ *   entrada. Si el CDN de GSAP falla, la galería se ve y funciona igual.
  *
  * Los `alt` se generan con un patrón honesto (frase de categoría + posición),
  * porque el CSV no trae descripciones. Conviene reemplazarlos por descripciones
@@ -18,31 +22,27 @@ import { GALERIA, CATEGORIAS, urlMiniatura, urlGrande } from './config.js';
 
 const CONSULTA_MOVIMIENTO = '(prefers-reduced-motion: reduce)';
 
-/** Fotos que se muestran por tanda. Con 53 imágenes remotas conviene escalonar. */
-const POR_TANDA = 12;
+/** Velocidad de deriva de los carriles, en píxeles por segundo. */
+const VELOCIDAD_CARRIL = 26;
+
+/** Copias máximas de un bloque para cubrir pantallas anchas con filtros chicos. */
+const MAX_VUELTAS = 8;
 
 export function initGaleria() {
-  const grid = document.getElementById('galeria-grid');
-  if (!grid) return;
+  const carriles = document.getElementById('galeria-carriles');
+  if (!carriles) return;
 
-  const fotos = prepararFotos();
-  const tarjetas = montarTarjetas(grid, fotos);
   const estado = {
     categoria: 'todas',
-    coincidentes: tarjetas.slice(),
+    fotos: prepararFotos(),
     visibles: [],
-    tarjetas,
-    fotos,
-    limite: POR_TANDA,
-    limpiarEntrada: () => {},
   };
 
   montarFiltros(estado);
-  montarLightbox(grid, estado);
-  montarBotonMas(estado);
-  pintar(estado);
-
-  estado.limpiarEntrada = animarEntrada(estado.visibles);
+  montarLightbox(carriles, estado);
+  render(estado);
+  observarCarriles(carriles);
+  animarEntrada(carriles);
 }
 
 /** Devuelve la instancia de GSAP si el CDN cargó; si no, null. */
@@ -102,39 +102,40 @@ function prepararFotos() {
   });
 }
 
-/** Construye una tarjeta (botón) por foto y las monta en el grid. */
-function montarTarjetas(grid, fotos) {
-  const fragmento = document.createDocumentFragment();
-  const tarjetas = [];
+/**
+ * Marca la imagen para que salga del opacidad 0. `cloneNode` NO copia listeners,
+ * así que esta función se aplica otra vez a cada copia del carril: sin eso los
+ * clones se quedaban invisibles para siempre.
+ */
+function marcarCargada(img) {
+  if (img.complete && img.naturalWidth > 0) {
+    img.classList.add('cargada');
+    return;
+  }
+  img.addEventListener('load', () => img.classList.add('cargada'), { once: true });
+}
 
-  fotos.forEach((foto) => {
-    const boton = document.createElement('button');
-    boton.type = 'button';
-    boton.className = 'galeria__item';
-    boton.dataset.indice = String(foto.indice);
-    boton.dataset.categoria = foto.categoria;
-    boton.setAttribute('aria-label', `Ampliar fotografía: ${foto.alt}`);
+/** Construye la tarjeta (botón) de una foto. */
+function crearTarjeta(foto) {
+  const boton = document.createElement('button');
+  boton.type = 'button';
+  boton.className = 'galeria__item';
+  boton.dataset.indice = String(foto.indice);
+  boton.dataset.categoria = foto.categoria;
+  boton.setAttribute('aria-label', `Ampliar fotografía: ${foto.alt}`);
 
-    const img = document.createElement('img');
-    img.alt = foto.alt;
-    // Dimensiones intrínsecas de la miniatura: evitan el salto de layout (CLS).
-    img.width = 600;
-    img.height = 450;
-    img.loading = 'lazy';
-    img.decoding = 'async';
-    // El fundido se engancha antes de asignar src para no perder un load rápido
-    // (caché) ni el caso en que la imagen ya esté completa.
-    img.addEventListener('load', () => img.classList.add('cargada'), { once: true });
-    img.src = urlMiniatura(foto);
-    if (img.complete) img.classList.add('cargada');
+  const img = document.createElement('img');
+  img.alt = foto.alt;
+  // Dimensiones intrínsecas de la miniatura: evitan el salto de layout (CLS).
+  img.width = 600;
+  img.height = 450;
+  img.loading = 'lazy';
+  img.decoding = 'async';
+  img.src = urlMiniatura(foto);
+  marcarCargada(img);
 
-    boton.appendChild(img);
-    fragmento.appendChild(boton);
-    tarjetas.push(boton);
-  });
-
-  grid.appendChild(fragmento);
-  return tarjetas;
+  boton.appendChild(img);
+  return boton;
 }
 
 /** Crea los botones de filtro (Todas + categorías con sus conteos). */
@@ -163,10 +164,8 @@ function montarFiltros(estado) {
     boton.addEventListener('click', () => {
       if (estado.categoria === opcion.id) return;
       estado.categoria = opcion.id;
-      estado.limite = POR_TANDA;
       botones.forEach((b) => b.setAttribute('aria-pressed', String(b === boton)));
-      calcularCoincidentes(estado);
-      pintar(estado, { animar: true });
+      render(estado, { animar: true });
     });
 
     contenedor.appendChild(boton);
@@ -174,126 +173,169 @@ function montarFiltros(estado) {
   });
 }
 
-/** Recalcula el conjunto de tarjetas que corresponden a la categoría activa. */
-function calcularCoincidentes(estado) {
-  estado.coincidentes = estado.tarjetas.filter(
-    (tarjeta) => estado.categoria === 'todas' || tarjeta.dataset.categoria === estado.categoria
-  );
+/**
+ * Reconstruye los dos carriles con la categoría activa. Las tarjetas se crean
+ * una sola vez (son las que navega el lightbox) y luego se clonan para el bucle.
+ */
+function render(estado, { animar = false } = {}) {
+  const contenedor = document.getElementById('galeria-carriles');
+  if (!contenedor) return;
+
+  const seleccion = estado.categoria === 'todas'
+    ? estado.fotos
+    : estado.fotos.filter((foto) => foto.categoria === estado.categoria);
+
+  const filas = [[], []];
+  const tarjetas = new Map();
+
+  seleccion.forEach((foto, posicion) => {
+    const tarjeta = crearTarjeta(foto);
+    tarjetas.set(foto.indice, tarjeta);
+    filas[posicion % 2].push(tarjeta);
+  });
+
+  // El lightbox navega en el orden natural de la selección, no en el visual.
+  estado.visibles = seleccion.map((foto) => tarjetas.get(foto.indice)).filter(Boolean);
+
+  contenedor.replaceChildren();
+
+  filas.forEach((fila, indiceFila) => {
+    if (!fila.length) return;
+
+    const envoltura = document.createElement('div');
+    envoltura.className = 'galeria__carril-envoltura';
+
+    const carril = document.createElement('div');
+    carril.className = `galeria__carril galeria__carril--${indiceFila === 0 ? 'izq' : 'der'}`;
+    fila.forEach((tarjeta) => carril.appendChild(tarjeta));
+
+    envoltura.appendChild(carril);
+    contenedor.appendChild(envoltura);
+
+    duplicarCarril(carril, contenedor.clientWidth);
+  });
+
+  if (animar) animarCambio(contenedor);
 }
 
 /**
- * Pinta el estado: muestra la tanda actual, actualiza `estado.visibles` (que es
- * lo que navega el lightbox) y sincroniza el botón "Ver más".
+ * Clona una tarjeta para el bucle y la marca como decorativa: el teclado y el
+ * lector de pantalla recorren solo la primera mitad, pero sigue siendo clicable
+ * porque comparte data-indice con la original.
  */
-function pintar(estado, { animar = false } = {}) {
-  // Se memoriza lo que ya estaba en pantalla: al destapar otra tanda solo
-  // animamos las nuevas, para que las anteriores no parpadeen.
-  const previas = new Set(estado.visibles);
-  const mostradas = [];
+function clonarTarjeta(tarjeta) {
+  const clon = tarjeta.cloneNode(true);
+  clon.classList.add('galeria__item--clon');
+  clon.setAttribute('aria-hidden', 'true');
+  clon.setAttribute('tabindex', '-1');
+  // cloneNode no copia listeners: sin esto la copia se quedaría en opacidad 0.
+  marcarCargada(clon.querySelector('img'));
+  return clon;
+}
 
-  estado.tarjetas.forEach((tarjeta) => {
-    tarjeta.hidden = true;
-  });
+/**
+ * Prepara el bucle infinito: repite el bloque hasta cubrir el ancho visible y
+ * después lo duplica. El desplazamiento de media anchura equivale a un bloque,
+ * así que el salto final es imperceptible.
+ */
+function duplicarCarril(carril, anchoVisible) {
+  const originales = [...carril.children];
+  if (!originales.length) return;
 
-  estado.coincidentes.forEach((tarjeta, indice) => {
-    if (indice < estado.limite) {
-      tarjeta.hidden = false;
-      mostradas.push(tarjeta);
-    }
-  });
+  const ancho = () => carril.getBoundingClientRect().width;
 
-  estado.visibles = mostradas;
-
-  const boton = document.getElementById('galeria-mas');
-  if (boton) {
-    const restantes = estado.coincidentes.length - mostradas.length;
-    boton.hidden = restantes <= 0;
-    boton.textContent = restantes > 0
-      ? `Ver más fotografías (${restantes})`
-      : 'Ver más fotografías';
+  // Con filtros chicos (Clausura son 6 fotos por carril) un solo bloque podría
+  // no cubrir la pantalla y se vería el hueco al final del recorrido.
+  let vueltas = 1;
+  while (ancho() < anchoVisible && vueltas < MAX_VUELTAS) {
+    originales.forEach((tarjeta) => carril.appendChild(clonarTarjeta(tarjeta)));
+    vueltas++;
   }
 
-  if (animar) {
-    const nuevas = mostradas.filter((tarjeta) => !previas.has(tarjeta));
-    animarCambio(estado, nuevas.length ? nuevas : mostradas);
+  [...carril.children].forEach((nodo) => carril.appendChild(clonarTarjeta(nodo)));
+
+  const mitad = ancho() / 2;
+  if (mitad > 0) {
+    carril.style.setProperty('--duracion', `${(mitad / VELOCIDAD_CARRIL).toFixed(1)}s`);
   }
 }
 
-/** Monta el botón de paginación progresiva. */
-function montarBotonMas(estado) {
-  const boton = document.getElementById('galeria-mas');
-  if (!boton) return;
+/** Activa el movimiento solo mientras la sección está a la vista. */
+function observarCarriles(contenedor) {
+  const activar = (activo) => {
+    contenedor.classList.toggle('galeria__carriles--activo', activo);
+  };
 
-  boton.addEventListener('click', () => {
-    estado.limite += POR_TANDA;
-    pintar(estado, { animar: true });
-  });
+  if (!('IntersectionObserver' in window)) {
+    activar(true);
+    return;
+  }
+
+  const observador = new IntersectionObserver(
+    (entradas) => activar(entradas.some((entrada) => entrada.isIntersecting)),
+    { rootMargin: '0px 0px -10% 0px' }
+  );
+  observador.observe(contenedor);
 }
 
-/** Fade corto al cambiar de filtro o al destapar otra tanda. */
-function animarCambio(estado, mostradas) {
+/**
+ * Revelado de entrada con GSAP: opacidad + un desplazamiento corto, disparado
+ * por ScrollTrigger. Los carriles no se tocan (su transform es de la animación
+ * CSS): se anima la envoltura.
+ */
+function animarEntrada(contenedor) {
   const gsap = gsapDisponible();
   if (!gsap) return;
 
-  // La entrada inicial ya no sirve: matamos sus tweens y ScrollTriggers.
-  gsap.killTweensOf(estado.tarjetas);
-  estado.limpiarEntrada();
-
-  if (window.matchMedia(CONSULTA_MOVIMIENTO).matches) return;
-
-  gsap.fromTo(
-    mostradas,
-    { autoAlpha: 0 },
-    { autoAlpha: 1, duration: 0.22, ease: 'power1.out', overwrite: true, clearProps: 'opacity,visibility' }
-  );
-}
-
-/**
- * Entrada de las tarjetas con GSAP: autoAlpha + un desplazamiento vertical
- * chico, con stagger, disparada por ScrollTrigger para las que están fuera de
- * pantalla. Con movimiento reducido las duraciones son 0 y no hay desplazamiento.
- * Devuelve una función que revierte todo (para limpiar al re-filtrar).
- */
-function animarEntrada(tarjetas) {
-  const gsap = gsapDisponible();
-  if (!gsap) return () => {};
-
   const ScrollTrigger = window.ScrollTrigger;
   if (ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+  const envolturas = [...contenedor.querySelectorAll('.galeria__carril-envoltura')];
+  if (!envolturas.length) return;
 
   const mm = gsap.matchMedia();
   mm.add({ reduceMotion: CONSULTA_MOVIMIENTO }, (context) => {
     const mover = !context.conditions.reduceMotion;
     const vars = {
       autoAlpha: 0,
-      y: mover ? 18 : 0,
-      duration: mover ? 0.5 : 0,
+      x: mover ? -24 : 0,
+      duration: mover ? 0.6 : 0,
       ease: 'power2.out',
-      stagger: mover ? { amount: 0.5 } : 0,
-      // Devuelve el control del transform al CSS para que el hover no pelee
-      // contra un transform inline que dejó GSAP.
+      stagger: mover ? 0.12 : 0,
       clearProps: 'transform,opacity,visibility',
     };
 
     if (ScrollTrigger) {
-      gsap.from(tarjetas, {
+      gsap.from(envolturas, {
         ...vars,
-        scrollTrigger: { trigger: '#galeria-grid', start: 'top 82%', once: true },
+        scrollTrigger: { trigger: contenedor, start: 'top 82%', once: true },
       });
     } else {
-      gsap.from(tarjetas, vars);
+      gsap.from(envolturas, vars);
     }
   });
+}
 
-  // matchMedia revierte por su cuenta los tweens y ScrollTriggers que creó.
-  return () => mm.revert();
+/** Fundido corto al cambiar de filtro, ya que los carriles se reconstruyen. */
+function animarCambio(contenedor) {
+  const gsap = gsapDisponible();
+  if (!gsap || window.matchMedia(CONSULTA_MOVIMIENTO).matches) return;
+
+  const envolturas = [...contenedor.querySelectorAll('.galeria__carril-envoltura')];
+  if (!envolturas.length) return;
+
+  gsap.fromTo(
+    envolturas,
+    { autoAlpha: 0 },
+    { autoAlpha: 1, duration: 0.28, ease: 'power1.out', stagger: 0.06, clearProps: 'opacity,visibility' }
+  );
 }
 
 /**
  * Lightbox accesible. Navega sobre las tarjetas visibles (respetando el filtro),
  * atrapa el foco mientras está abierto y lo devuelve al elemento que lo abrió.
  */
-function montarLightbox(grid, estado) {
+function montarLightbox(contenedor, estado) {
   const lightbox = document.getElementById('lightbox');
   const imagen = document.getElementById('lightbox-imagen');
   const btnCerrar = document.getElementById('lightbox-cerrar');
@@ -345,7 +387,9 @@ function montarLightbox(grid, estado) {
     const indice = Number(tarjeta.dataset.indice);
     const destino = estado.visibles.findIndex((t) => Number(t.dataset.indice) === indice);
     if (destino === -1) return;
-    elementoFoco = document.activeElement;
+    // Se devuelve el foco a la tarjeta que abrió el visor, no a `activeElement`:
+    // en Safari y Firefox un clic con el mouse no enfoca el botón.
+    elementoFoco = tarjeta;
     mostrar(destino);
     lightbox.classList.add('abierto');
     document.body.style.overflow = 'hidden';
@@ -359,7 +403,7 @@ function montarLightbox(grid, estado) {
     elementoFoco = null;
   }
 
-  grid.addEventListener('click', (e) => {
+  contenedor.addEventListener('click', (e) => {
     const tarjeta = e.target.closest('.galeria__item[data-indice]');
     if (tarjeta) abrir(tarjeta);
   });

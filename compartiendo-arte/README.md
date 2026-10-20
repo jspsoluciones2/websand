@@ -32,7 +32,7 @@ compartiendo-arte/
         ├── reveal.js       → revelado de bloques al entrar en pantalla
         ├── navbar.js       → navegación, scroll-spy y menú móvil
         ├── widget.js       → botón flotante de contacto y modales
-        ├── galeria.js      → galería de fotos reales + filtros, paginación y lightbox
+        ├── galeria.js      → galería de fotos reales: carriles, filtros y lightbox
         ├── social.js       → enlaces de redes sociales
         └── certificados.js → lógica de consulta de certificados
 ```
@@ -107,13 +107,19 @@ array.
 
 Comportamiento de `public/js/galeria.js`:
 
-- Se muestran 12 fotos por tanda y el botón "Ver más fotografías" destapa el
-  resto del filtro activo.
-- El lightbox navega solo las fotos visibles, atrapa el foco, acepta Escape y
-  flechas, muestra categoría y contador, y devuelve el foco a la tarjeta al
-  cerrar.
-- Las animaciones usan GSAP (CDN, `gsap` + `ScrollTrigger`). Si el CDN falla,
-  la galería se ve y funciona igual; `prefers-reduced-motion` las desactiva.
+- Dos carriles horizontales que se desplazan en sentidos opuestos con
+  `@keyframes` de CSS. Se detienen cuando la sección sale de pantalla, al pasar
+  el mouse o al llegar con el teclado, y `prefers-reduced-motion` los convierte
+  en una grilla estática (dos columnas en celular, sin copias).
+- Cada carril duplica su contenido para que el bucle no tenga costura; las
+  copias son `aria-hidden` y `tabindex="-1"`, así que el teclado y el lector de
+  pantalla recorren cada foto una sola vez.
+- El lightbox navega solo las fotos del filtro activo, atrapa el foco, acepta
+  Escape y flechas, muestra categoría y contador, y devuelve el foco a la
+  tarjeta al cerrar.
+- GSAP (CDN, `gsap` + `ScrollTrigger`) solo aporta el revelado de entrada y el
+  fundido al cambiar de filtro. Si el CDN falla, la galería se ve y funciona
+  igual: el movimiento de los carriles no depende de GSAP.
 
 ## Certificados
 

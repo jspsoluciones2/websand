@@ -485,13 +485,61 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 .servicio-tarjeta > a { margin-top: auto; font-weight: 700; text-decoration: none; }
 .servicio-tarjeta > a:hover { text-decoration: underline; }
 
-/* ===== Galería (guía §17, §28) ===== */
-.galeria__grid {
-  display: grid; gap: var(--space-5);
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+/* ===== Galería: dos carriles en movimiento (guía §17, §28) ===== */
+/* El contenedor recorta el desborde de los carriles. Sin `overflow: hidden` la
+   página ganaría scroll horizontal con el contenido de ancho máximo. */
+.galeria__carriles {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  padding-block: var(--space-2);
 }
 
+/* La envoltura recorta el carril (si no, la pista de la grilla se estira a los
+   ~18 000 px del bucle). El padding vertical separa las filas 16 px y, como el
+   recorte ocurre en el borde de padding, deja aire para la sombra del hover. */
+.galeria__carril-envoltura {
+  overflow: hidden;
+  padding-block: var(--space-2);
+}
+
+.galeria__carril {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+/* El desplazamiento es de media anchura porque cada carril duplica su contenido:
+   así el salto del final al principio es invisible. */
+@keyframes carril-izquierda {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes carril-derecha {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+/* El shorthand `animation` reinicia animation-play-state, así que estas reglas
+   van antes de las de pausa: si no, dejarían los carriles siempre en marcha. */
+.galeria__carril--izq { animation: carril-izquierda var(--duracion, 320s) linear infinite; }
+.galeria__carril--der { animation: carril-derecha var(--duracion, 320s) linear infinite; }
+
+/* Los carriles solo se mueven cuando la sección entró en pantalla; la clase la
+   pone el IntersectionObserver para no gastar CPU fuera de vista. */
+.galeria__carril { animation-play-state: paused; }
+.galeria__carriles--activo .galeria__carril { animation-play-state: running; }
+
+/* Pausa al pasar el mouse o al llegar con teclado (WCAG 2.2.2). */
+.galeria__carriles:hover .galeria__carril,
+.galeria__carriles:focus-within .galeria__carril { animation-play-state: paused; }
+
 .galeria__item {
+  flex: 0 0 auto;
+  /* El margen, y no un gap del flex, deja el hueco también tras la última
+     tarjeta: sin eso el bucle de media anchura no cierra exacto. */
+  width: clamp(200px, 24vw, 320px);
+  margin-right: var(--space-4);
   position: relative; overflow: hidden;
   aspect-ratio: 4 / 3;
   border: 1px solid var(--border); border-radius: var(--radius-md);
@@ -551,12 +599,12 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 .galeria__filtro:hover { border-color: var(--purple); background: var(--purple-tint); color: var(--purple); }
 .galeria__filtro[aria-pressed="true"] { background: var(--purple); border-color: var(--purple); color: var(--white); }
 
-/* Las tarjetas ocultas por el filtro o por la paginación salen del flujo. */
+/* Las tarjetas ocultas por un filtro salen del flujo. */
 .galeria__item[hidden] { display: none; }
 
-/* Paginación progresiva: con 53 fotos remotas no tiene sentido volcarlas todas. */
-.galeria__mas { display: flex; justify-content: center; margin-top: var(--space-6); }
-.galeria__mas[hidden] { display: none; }
+/* Las copias del bucle son decorativas para el teclado y el lector de pantalla
+   (aria-hidden + tabindex -1), pero siguen siendo clicables: comparten
+   data-indice con la original, así que abren la misma foto. */
 
 /* Lightbox */
 .lightbox {
@@ -853,7 +901,6 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 
 /* ===== Responsive (guía §34) ===== */
 @media (min-width: 768px) {
-  .galeria__grid { grid-template-columns: repeat(2, 1fr); }
   .descargas-grid { grid-template-columns: repeat(2, 1fr); }
   .contacto__grid { grid-template-columns: 1.05fr .95fr; }
   .footer__grid { grid-template-columns: 1.4fr 1fr 1fr; }
@@ -870,7 +917,6 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   .sobre .grid-mision { grid-template-columns: repeat(2, 1fr); }
   .sobre .grid-valores { grid-template-columns: repeat(3, 1fr); }
   .servicios .grid { grid-template-columns: repeat(4, 1fr); }
-  .galeria__grid { grid-template-columns: repeat(3, 1fr); }
   .descargas-grid { grid-template-columns: repeat(3, 1fr); }
   /* La quinta tarjeta de descargas centra sola en la última fila */
   .descargas-grid .descarga-tarjeta:last-child:nth-child(3n+1) { grid-column: 1 / -1; max-width: 460px; }
@@ -914,6 +960,9 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   .pagina-legal main { padding-block: var(--space-7) var(--space-8); }
   .ficha-legal div { grid-template-columns: 1fr; gap: 2px; }
 
+  /* Carriles: tarjetas más chicas y menos aire entre tarjetas. */
+  .galeria__item { width: clamp(150px, 58vw, 230px); margin-right: var(--space-3); }
+
   /* Lightbox: a 390px las flechas laterales tapaban la fotografía, así que
      pasan a una fila junto al pie, debajo de la imagen. */
   .lightbox { padding: var(--space-5) var(--space-4); }
@@ -950,4 +999,16 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   html.tiene-reveal .cabecera-seccion { opacity: 1; transform: none; }
 
   .hero__indicador svg { animation: none; }
+
+  /* Sin movimiento, los carriles pasan a una grilla estática: si quedaran
+     quietos y recortados, la mitad de las fotos sería inalcanzable. Dos
+     columnas en celular para no convertir esto en una lista infinita. */
+  .galeria__carriles {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-3);
+  }
+  .galeria__carril-envoltura,
+  .galeria__carril { display: contents; }
+  .galeria__item { width: auto; margin-right: 0; }
+  .galeria__item--clon { display: none; }
 }
