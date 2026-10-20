@@ -12,6 +12,10 @@ node_modules/
 .playwright-mcp/
 *.log
 
+# --- Insumos locales (datos con rutas absolutas) ---
+urlsIMG.csv
+COMPARTIENDO_ARTE_videos_y_shorts.csv
+
 # --- Temp screenshots ---
 /*..playwright-mcp/
 /*.png

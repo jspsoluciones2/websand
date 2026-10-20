@@ -28,7 +28,7 @@ export const CONFIG = {
     tiktok: "",
     instagram: "",
     facebook: "",
-    youtube: "",
+    youtube: "https://www.youtube.com/@compartiendoarte",
   },
 
   // Endpoints de la API.
@@ -192,3 +192,104 @@ export function urlMiniatura(foto) {
 export function urlGrande(foto) {
   return `${CLOUDINARY_BASE}/${TRANSFORM_GRANDE}/${codificarRuta(foto.publicId)}`;
 }
+
+/* ===== Videos y shorts del canal de YouTube ===== */
+
+/**
+ * Selección curada del canal. El CSV original trae 27 videos, pero varios
+ * repiten el mismo título y el mismo proyecto con distinta duración; mostrar
+ * los 27 en el carril hacía que la sección se leyera como un error. Esta lista
+ * prioriza las piezas con identidad propia y ordena el recorrido: módulos,
+ * memoria, muestra, clausura y convocatorias. El resto sigue disponible en el
+ * canal (botón "Ver todo el canal").
+ *
+ * Para sumar una pieza basta con agregar `{ id, titulo, duracion }`: el id es
+ * el fragmento `v=` de la URL de YouTube.
+ */
+export const VIDEOS = [
+  { id: "O9M1ekZUNac", titulo: "Módulo 1 · Mi cuerpo, mi primera danza", duracion: "1:01" },
+  { id: "l_EU2HU1ckM", titulo: "Módulo 2 · Raíces y memorias en movimiento", duracion: "1:17" },
+  { id: "PB0-ANXa2_E", titulo: "Módulo 3 · Ritmos que nos unen", duracion: "1:49" },
+  { id: "2IRfS6-MM9A", titulo: "Módulo 5 · La danza que inspira liderazgo", duracion: "1:27" },
+  { id: "88Sn_P1Q_Fc", titulo: "Video memoria · Transforma tu vida a través de la danza", duracion: "6:28" },
+  { id: "7VlMvit8R14", titulo: "Muestra artística del proceso formativo", duracion: "3:16" },
+  { id: "LSQgRRRZJFc", titulo: "Clausura · Transforma tu vida a través de la danza", duracion: "5:34" },
+  { id: "pesZSikVMHU", titulo: "Invitación a la clausura", duracion: "0:11" },
+  { id: "j_xbctUKbho", titulo: "Resumen · Transformando culturas", duracion: "3:30" },
+  { id: "1BKKNPWggJM", titulo: "Fénix · Transformando vidas a través de la pintura", duracion: "6:36" },
+  { id: "YHZBdW-U1BI", titulo: "Ensayos del proceso formativo", duracion: "3:21" },
+  { id: "7cYGB8KoNHM", titulo: "Proceso formativo en danza", duracion: "4:00" },
+  { id: "w8FJ4CgqJoM", titulo: "Proceso formativo · Compartiendo Arte", duracion: "3:21" },
+  { id: "mXIefShrhww", titulo: "ABC · Convocatoria para organizaciones comunitarias", duracion: "4:32" },
+  { id: "1N_QRJJdSwY", titulo: "Fénix · Convocatoria ICBF", duracion: "2:54" },
+  { id: "uaWJ0oUgO5c", titulo: "Inscripciones · Transformando culturas", duracion: "0:06" },
+];
+
+/**
+ * Shorts (video vertical 9:16). Se muestran en un bloque estático y chico, no
+ * en el carril: mezclar 16:9 con 9:16 en una misma fila rompe la alineación.
+ */
+export const SHORTS = [
+  { id: "zrHDEDQVW-c", titulo: "31 de julio de 2026" },
+  { id: "lbYfpJc45tg", titulo: "Niños, niñas y adolescentes beneficiarios del proyecto" },
+  { id: "gPZ9y2ViWGg", titulo: "Proceso formativo en danza" },
+  { id: "-R1rEerz0VY", titulo: "Convocatoria · Transformando culturas" },
+  { id: "bHI2ykuXESI", titulo: "Transforma tu vida a través de la danza" },
+];
+
+const YOUTUBE_THUMB = "https://i.ytimg.com/vi";
+
+/**
+ * Videos que YouTube no permite embeber (error 150: contenido marcado como
+ * "hecho para niños" o embedding desactivado por el canal). No es un problema
+ * del sitio y no se arregla con parámetros: el reproductor responde con un
+ * cartel de error. Para esos, la tarjeta abre YouTube en una pestaña nueva.
+ *
+ * Si el canal habilita el embedding más adelante, basta con sacar el id de
+ * esta lista.
+ */
+const SIN_EMBED = new Set([
+  "7VlMvit8R14",
+  "LSQgRRRZJFc",
+  "pesZSikVMHU",
+  "j_xbctUKbho",
+  "YHZBdW-U1BI",
+  "w8FJ4CgqJoM",
+  "zrHDEDQVW-c",
+  "lbYfpJc45tg",
+  "gPZ9y2ViWGg",
+]);
+
+/** Indica si el video se puede reproducir dentro del sitio. */
+export const esEmbebible = (id) => !SIN_EMBED.has(id);
+
+/** URL pública del video en YouTube (para las tarjetas externas). */
+export const urlVideoYouTube = (id) => `https://www.youtube.com/watch?v=${id}`;
+
+/**
+ * Miniatura de YouTube. Se usa `hqdefault` (480×360) y no `maxresdefault`
+ * (1280×720) a propósito: la de alta resolución falta en algunos videos y
+ * pesa cuatro veces más. A 420 px de ancho la diferencia no se nota y en
+ * conexiones rurales el ahorro sí.
+ */
+export const urlMiniaturaVideo = (id) => `${YOUTUBE_THUMB}/${id}/hqdefault.jpg`;
+
+/** Respaldo liviano por si `hqdefault` no estuviera disponible. */
+export const urlMiniaturaVideoAlterna = (id) => `${YOUTUBE_THUMB}/${id}/mqdefault.jpg`;
+
+/**
+ * Reproductor del visor. `youtube-nocookie` evita cookies de YouTube hasta que
+ * la persona decide reproducir: el sitio publica imágenes de menores.
+ */
+export const urlEmbedVideo = (id) =>
+  `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+
+/**
+ * Vista previa silenciosa para el hover del carril: sin controles, en bucle y
+ * sin sonido, que es lo único que el navegador permite autoreproducir.
+ */
+export const urlEmbedPreview = (id) =>
+  `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&rel=0&modestbranding=1&playsinline=1`;
+
+/** Canal institucional, destino del botón de cierre de la sección. */
+export const CANAL_YOUTUBE = "https://www.youtube.com/@compartiendoarte";

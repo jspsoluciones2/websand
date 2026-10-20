@@ -85,6 +85,9 @@ Con `prefers-reduced-motion` no hay animación.
 - **AI_EMBED_URL**: código de embed del asistente IA (pendiente).
 - **LOGO_URL** / **LOGO_URL_SMALL**: logo desde Cloudinary con transformación automática de formato y ancho.
 - **SLIDES**: imágenes del carrusel del hero (URL con `f_auto,q_auto,c_limit,w_2000`, `alt`, dimensiones y estrategia de carga).
+- **VIDEOS** / **SHORTS**: selección del canal de YouTube (`id`, `titulo`, `duracion`).
+- **esEmbebible()**: consulta la lista `SIN_EMBED` de videos que YouTube no deja reproducir dentro del sitio.
+- **CANAL_YOUTUBE**: URL del canal, usada por el botón de cierre de la sección.
 
 También hay contenedores preparados con comentarios en el HTML:
 `#tally-form-container`, `#tally-modal-container` y `#ai-assistant-container`.
@@ -121,6 +124,46 @@ Comportamiento de `public/js/galeria.js`:
   fundido al cambiar de filtro. Si el CDN falla, la galería se ve y funciona
   igual: el movimiento de los carriles no depende de GSAP.
 
+## Videos y shorts
+
+La sección "En movimiento" toma el canal `@compartiendoarte`. Los datos viven
+en `public/js/config.js` como `VIDEOS` (16 piezas 16:9) y `SHORTS` (5 piezas
+verticales); salen de `COMPARTIENDO_ARTE_videos_y_shorts.csv`, que es un insumo
+local y **no se versiona**.
+
+- El CSV original trae 27 videos, pero varios repiten el mismo título con
+  distinta duración. La lista publicada es una selección curada para que el
+  carril no se lea como un error; el resto sigue disponible en el canal con el
+  botón "Ver todo el canal".
+- Los títulos se reescribieron en oración ("Módulo 2 · Raíces y memorias en
+  movimiento") porque los originales vienen en mayúsculas y con numeración
+  interna. El título de YouTube queda a la vista al abrir el video o en el
+  canal.
+- **No todos los videos se pueden embeber.** YouTube responde con error 150
+  (contenido marcado como "hecho para niños" o embedding desactivado por el
+  canal) en 6 de los 16 videos y 3 de los 5 shorts. Esos ids están en
+  `SIN_EMBED`: su tarjeta abre YouTube en una pestaña nueva y muestra `↗` en
+  lugar del `▶`. Si el canal habilita el embedding, basta con quitar el id de
+  esa lista.
+
+Comportamiento de `public/js/videos.js`:
+
+- Un solo carril 16:9 con la misma técnica que la galería (copias para el bucle
+  sin costura, pausa fuera de pantalla, al pasar el mouse y con el teclado).
+  Con `prefers-reduced-motion` pasa a grilla estática, sin copias ni vista
+  previa automática.
+- Los shorts van en un bloque estático 9:16 debajo, más chico: mezclar ambas
+  proporciones en una misma fila rompe la alineación.
+- Ninguna tarjeta es un iframe. Se usan miniaturas de `i.ytimg.com`
+  (`hqdefault`, con `mqdefault` de respaldo) y el reproductor se crea recién al
+  abrir el visor.
+- Vista previa al pasar el mouse: un único iframe mudo, sin controles y en
+  bucle, después de ~450 ms. Solo en equipos con puntero fino, nunca en celular
+  ni con movimiento reducido. Al salir se destruye y no queda audio sonando.
+- El visor usa `youtube-nocookie.com`, adapta el marco a 16:9 o 9:16, destruye
+  el iframe al cerrar o al cambiar de video, atrapa el foco, acepta Escape y
+  flechas, y devuelve el foco a la tarjeta de origen.
+
 ## Certificados
 
 - La consulta se hace por **número de documento** contra `/api/certificado`.
@@ -134,12 +177,15 @@ Comportamiento de `public/js/galeria.js`:
 - La única dependencia externa de tiempo de ejecución es GSAP (`gsap` + `ScrollTrigger`) desde jsDelivr, solo para la entrada y los fundidos de la galería. Es opcional por diseño: si el CDN falla, todo sigue funcionando. El resto del movimiento es CSS + IntersectionObserver.
 - Foco visible en todo el sitio (`:focus-visible`), enlace de salto al contenido y `aria-label` en todos los controles de icono.
 - El carrusel expone `role="group"` + `aria-roledescription="carrusel"`, y las imágenes inactivas quedan fuera del árbol de accesibilidad con `aria-hidden="true"`.
+- La sección de videos no carga ningún iframe de YouTube al abrir la página: sin interacción no hay cookies de terceros ni megabytes de reproductor. Las miniaturas se sirven desde `i.ytimg.com` con `loading="lazy"`.
 - Las imágenes del hero declaran `width`/`height` para evitar CLS; la primera usa `loading="eager"` + `fetchpriority="high"` y las demás `loading="lazy"`.
 - `prefers-reduced-motion` desactiva el auto-avance, el revelado y las transiciones.
 - Mobile-first, probado desde 360px.
 
 ## Pendiente del cliente
 
+- Revisar en YouTube Studio si el canal puede habilitar el embedding de los videos marcados como "hecho para niños" (hoy 9 piezas abren YouTube en otra pestaña).
+- Confirmar si los títulos curados de los videos representan cada pieza o si prefieren otro criterio.
 - Descripciones reales de cada fotografía para reemplazar los `alt` automáticos.
 - URLs definitivas de redes sociales (hoy los enlaces son `#`).
 - Número y mensaje definitivos de WhatsApp.

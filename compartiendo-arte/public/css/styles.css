@@ -655,6 +655,242 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 .lightbox__nav--prev { left: var(--space-4); top: 50%; transform: translateY(-50%); }
 .lightbox__nav--sig { right: var(--space-4); top: 50%; transform: translateY(-50%); }
 
+/* El panel es flex y se encoge al contenido: el ancho del marco se calcula en
+   unidades de viewport, no con porcentajes, o termina del tamaño del iframe. */
+.lightbox__marco {
+  width: min(92vw, 1000px, calc(76vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.lightbox__marco--vertical {
+  width: min(92vw, 420px, calc(76vh * 9 / 16));
+  aspect-ratio: 9 / 16;
+}
+.lightbox__marco iframe { display: block; width: 100%; height: 100%; border: 0; }
+.lightbox__titulo {
+  max-width: 60ch;
+  text-align: center;
+  font-size: 14px; line-height: 1.45;
+  color: rgba(255, 255, 255, .88);
+}
+
+/* ===== Videos (guía §17) ===== */
+/* Banda lavanda: separa la sección de la galería sin abrir un bloque oscuro
+   que compitiera con la banda violeta de certificados, justo a continuación. */
+.videos { background: var(--purple-tint); }
+
+.videos__carriles {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  padding-block: var(--space-2);
+}
+
+/* Mismo truco que en la galería: la envoltura recorta el carril (si no, la
+   pista de la grilla se estira a los miles de píxeles del bucle) y el padding
+   deja aire para la sombra del hover. */
+.videos__carril-envoltura {
+  overflow: hidden;
+  padding-block: var(--space-2);
+}
+
+.videos__carril {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Reutiliza los @keyframes carril-izquierda/derecha de la galería. */
+.videos__carril--izq { animation: carril-izquierda var(--duracion, 420s) linear infinite; }
+
+/* El shorthand `animation` reinicia animation-play-state, así que las reglas
+   de pausa van después. */
+.videos__carril { animation-play-state: paused; }
+.videos__carriles--activo .videos__carril { animation-play-state: running; }
+.videos__carriles:hover .videos__carril,
+.videos__carriles:focus-within .videos__carril { animation-play-state: paused; }
+
+/* Las miniaturas ya traen títulos grandes quemados por el cliente, así que el
+   título propio va debajo de la tarjeta: superponerlos era ilegible. */
+.video {
+  flex: 0 0 auto;
+  width: clamp(240px, 30vw, 420px);
+  margin-right: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.video__boton {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: 1px solid rgba(75, 60, 140, .18);
+  border-radius: var(--radius-md);
+  background: var(--purple-deep);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.video__boton:hover { transform: translateY(-3px); }
+.video__boton img {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.video__boton img.cargada { opacity: 1; }
+.video__boton:hover img { transform: scale(1.04); }
+
+/* Vista previa silenciosa del hover: reemplaza la miniatura y no recibe
+   eventos, para que el clic siga llegando a la tarjeta. */
+.video__preview {
+  position: absolute; inset: 0; z-index: 1;
+  width: 100%; height: 100%;
+  border: 0; pointer-events: none;
+}
+
+/* Velo de marca: las miniaturas traen amarillos y rojos saturados que peleaban
+   con la paleta del sitio. Se levanta al pasar el mouse. */
+.video__boton::after,
+.short__boton::after {
+  content: "";
+  position: absolute; inset: 0; z-index: 2;
+  background: rgba(38, 28, 74, .18);
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+.video__boton:hover::after,
+.short__boton:hover::after { opacity: 0; }
+
+/* Mientras corre la vista previa, los distintivos propios estorban: el video
+   ya se está viendo y el botón tapaba el centro del cuadro. */
+.video__boton.con-preview .video__play,
+.video__boton.con-preview .video__duracion {
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+.video__duracion {
+  position: absolute; top: var(--space-2); right: var(--space-2); z-index: 3;
+  padding: 2px 7px;
+  background: rgba(18, 12, 40, .82); color: var(--white);
+  font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+  border-radius: 4px;
+}
+.video__play {
+  position: absolute; inset: 0; z-index: 3;
+  display: grid; place-items: center;
+  pointer-events: none;
+}
+.video__play span {
+  display: grid; place-items: center;
+  width: 54px; height: 54px;
+  padding-left: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .94);
+  color: var(--purple-deep);
+  font-size: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .28);
+  transition: transform var(--transition), background-color var(--transition);
+}
+.video__boton:hover .video__play span { transform: scale(1.08); background: var(--yellow); }
+
+/* Dos líneas fijas: los títulos tienen largos muy distintos y sin alto mínimo
+   el carril queda con dientes de sierra. */
+.video__titulo {
+  font-size: 14px; font-weight: 600; line-height: 1.35;
+  color: var(--dark);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  min-height: calc(2 * 1.35em);
+}
+
+/* Shorts: bloque estático y chico. Al ser 9:16 no comparten fila con los
+   16:9 sin romper la alineación. */
+.videos__shorts { margin-top: var(--space-7); }
+.videos__shorts-cabecera {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
+  gap: var(--space-1) var(--space-3);
+  margin-bottom: var(--space-3);
+  text-align: center;
+}
+.videos__shorts-cabecera h3 { font-size: 20px; color: var(--dark); }
+.videos__shorts-cabecera p { font-size: 15px; color: var(--text-secondary); }
+.videos__shorts-grid {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: var(--space-3);
+}
+.short {
+  flex: 0 1 168px;
+  min-width: 96px;
+  display: flex; flex-direction: column; gap: var(--space-2);
+}
+.short__boton {
+  position: relative;
+  display: block;
+  width: 100%; aspect-ratio: 9 / 16;
+  padding: 0;
+  border: 1px solid rgba(75, 60, 140, .18);
+  border-radius: var(--radius-md);
+  background: var(--purple-deep);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.short__boton:hover { transform: translateY(-3px); }
+.short__boton img {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.short__boton img.cargada { opacity: 1; }
+.short__boton:hover img { transform: scale(1.05); }
+.short__play {
+  position: absolute; inset: 0; z-index: 3;
+  display: grid; place-items: center;
+  pointer-events: none;
+}
+.short__play span {
+  display: grid; place-items: center;
+  width: 40px; height: 40px;
+  padding-left: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .94);
+  color: var(--purple-deep);
+  font-size: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
+}
+/* El ▶ necesita un pelo de compensación óptica; la flecha ↗ no. */
+.video__boton--externo .video__play span,
+.short__boton--externo .short__play span { padding-left: 0; }
+
+.short__titulo {
+  font-size: 13px; line-height: 1.35;
+  color: var(--text-secondary);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.videos__cierre {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: var(--space-3) var(--space-3);
+  margin-top: var(--space-6);
+  text-align: center;
+}
+.videos__nota { font-size: 13px; color: var(--text-secondary); }
+
 /* ===== Certificados (sección a sangre violeta, guía §29) ===== */
 .certificados__consulta { max-width: 720px; margin-inline: auto; }
 .certificados__form { display: flex; flex-direction: column; gap: var(--space-3); }
@@ -963,6 +1199,14 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   /* Carriles: tarjetas más chicas y menos aire entre tarjetas. */
   .galeria__item { width: clamp(150px, 58vw, 230px); margin-right: var(--space-3); }
 
+  /* Videos: una tarjeta por vez y media, para que el carril se lea sin marear. */
+  .video { width: clamp(230px, 74vw, 320px); margin-right: var(--space-3); }
+  .video__titulo { font-size: 13px; }
+  .videos__shorts { margin-top: var(--space-6); }
+  .short { flex: 0 1 30%; }
+  .lightbox__marco { width: min(100%, calc(62vh * 16 / 9)); }
+  .lightbox__marco--vertical { width: min(100%, calc(62vh * 9 / 16)); }
+
   /* Lightbox: a 390px las flechas laterales tapaban la fotografía, así que
      pasan a una fila junto al pie, debajo de la imagen. */
   .lightbox { padding: var(--space-5) var(--space-4); }
@@ -1011,4 +1255,14 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
   .galeria__carril { display: contents; }
   .galeria__item { width: auto; margin-right: 0; }
   .galeria__item--clon { display: none; }
+
+  /* Videos: misma caída estática, sin copias del bucle. */
+  .videos__carriles {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-4);
+  }
+  .videos__carril-envoltura,
+  .videos__carril { display: contents; }
+  .video { width: auto; margin-right: 0; }
+  .video--clon { display: none; }
 }

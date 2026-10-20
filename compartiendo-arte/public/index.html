@@ -223,6 +223,29 @@
       </div>
     </section>
 
+    <!-- ===== Videos ===== -->
+    <section class="seccion videos" id="videos" aria-labelledby="titulo-videos">
+      <div class="contenedor">
+        <div class="cabecera-seccion">
+          <span class="etiqueta-pill etiqueta-pill--melocoton">En movimiento</span>
+          <h2 id="titulo-videos">Nuestras historias en movimiento</h2>
+          <p class="eslogan">Resúmenes, muestras y convocatorias del proceso formativo.</p>
+        </div>
+        <div class="videos__carriles" id="videos-carril"></div>
+        <div class="videos__shorts">
+          <div class="videos__shorts-cabecera">
+            <h3>Shorts</h3>
+            <p>Piezas cortas, del taller al celular.</p>
+          </div>
+          <div class="videos__shorts-grid" id="videos-shorts"></div>
+        </div>
+        <div class="videos__cierre">
+          <a class="boton boton--solido" href="https://www.youtube.com/@compartiendoarte" target="_blank" rel="noopener noreferrer">Ver todo el canal</a>
+          <p class="videos__nota">Los reproductores de YouTube se cargan solo al abrir un video.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== Certificados ===== -->
     <section class="seccion certificados" id="certificados" aria-labelledby="titulo-certificados">
       <div class="contenedor">
@@ -523,6 +546,23 @@
         </p>
         <button class="lightbox__nav lightbox__nav--sig" id="lightbox-sig" aria-label="Imagen siguiente">›</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Lightbox de video -->
+  <div class="lightbox lightbox--video" id="video-lightbox" role="dialog" aria-modal="true" aria-label="Reproductor de video">
+    <button class="lightbox__cerrar" id="video-lightbox-cerrar" aria-label="Cerrar reproductor">✕</button>
+    <div class="lightbox__panel">
+      <div class="lightbox__marco" id="video-lightbox-marco"></div>
+      <div class="lightbox__controles">
+        <button class="lightbox__nav lightbox__nav--prev" id="video-lightbox-prev" aria-label="Video anterior">‹</button>
+        <p class="lightbox__pie">
+          <span class="lightbox__categoria" id="video-lightbox-tipo"></span>
+          <span class="lightbox__contador" id="video-lightbox-contador" aria-live="polite"></span>
+        </p>
+        <button class="lightbox__nav lightbox__nav--sig" id="video-lightbox-sig" aria-label="Video siguiente">›</button>
+      </div>
+      <p class="lightbox__titulo" id="video-lightbox-titulo"></p>
     </div>
   </div>
 

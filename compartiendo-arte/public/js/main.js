@@ -8,6 +8,7 @@ import { initReveal } from './reveal.js';
 import { initSlider } from './slider.js';
 import { initWidget } from './widget.js';
 import { initGaleria } from './galeria.js';
+import { initVideos } from './videos.js';
 import { initCertificados } from './certificados.js';
 import { initRedesSociales } from './social.js';
 
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSlider();
   initWidget();
   initGaleria();
+  initVideos();
   initCertificados();
   initRedesSociales();
 });
