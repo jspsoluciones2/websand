@@ -242,15 +242,22 @@ function duplicarCarril(carril, anchoVisible) {
   const originales = [...carril.children];
   if (!originales.length) return;
 
+  // Con movimiento reducido los carriles se vuelven una grilla estática: las
+  // copias del bucle no se muestran y solo inflarían el DOM (el carril mide 0
+  // porque pasa a display: contents y el bucle se dispararía al máximo).
+  if (window.matchMedia(CONSULTA_MOVIMIENTO).matches) return;
+
   const ancho = () => carril.getBoundingClientRect().width;
 
   // Con filtros chicos (Clausura son 6 fotos por carril) un solo bloque podría
   // no cubrir la pantalla y se vería el hueco al final del recorrido.
   let vueltas = 1;
-  while (ancho() < anchoVisible && vueltas < MAX_VUELTAS) {
+  while (ancho() > 0 && ancho() < anchoVisible && vueltas < MAX_VUELTAS) {
     originales.forEach((tarjeta) => carril.appendChild(clonarTarjeta(tarjeta)));
     vueltas++;
   }
+
+  if (ancho() === 0) return;
 
   [...carril.children].forEach((nodo) => carril.appendChild(clonarTarjeta(nodo)));
 
