@@ -31,9 +31,10 @@ export const CONFIG = {
     youtube: "https://www.youtube.com/@compartiendoarte",
   },
 
-  // Endpoints de la API.
+  // Endpoints de la API. `API_CERTIFICADO` es relativo a `API_BASE`:
+  // juntos forman /api/certificado (el Worker de Cloudflare).
   API_BASE: "/api",
-  API_CERTIFICADO: "/api/certificado",
+  API_CERTIFICADO: "/certificado",
 };
 
 /**
