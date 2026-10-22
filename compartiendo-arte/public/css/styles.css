@@ -1188,7 +1188,7 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 .pagina-legal h2:first-of-type { margin-top: var(--space-6); }
 .pagina-legal h3 { font-size: 19px; margin-top: var(--space-6); margin-bottom: var(--space-2); }
 .pagina-legal p { margin-bottom: var(--space-4); }
-.pagina-legal ul, .pagina-legal ol { margin: 0 0 var(--space-4) var(--space-5); display: grid; gap: var(--space-2); }
+.pagina-legal main ul, .pagina-legal main ol { margin: 0 0 var(--space-4) var(--space-5); display: grid; gap: var(--space-2); }
 
 /* Superficie cálida para la ficha de datos: tono papel, sin adornos */
 .ficha-legal {
