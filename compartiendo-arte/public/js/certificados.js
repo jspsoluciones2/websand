@@ -70,7 +70,7 @@ function enlacesCompartir(url, nombre) {
   };
 }
 
-async function copiarEnlace(texto, boton) {
+async function escribirPortapapeles(texto) {
   try {
     await navigator.clipboard.writeText(texto);
   } catch {
@@ -85,10 +85,74 @@ async function copiarEnlace(texto, boton) {
     document.execCommand("copy");
     area.remove();
   }
+}
 
-  const original = boton.textContent;
-  boton.textContent = "¡Copiado!";
-  setTimeout(() => { boton.textContent = original; }, 2000);
+function avisarCopiado(nodo) {
+  const original = nodo.textContent;
+  nodo.textContent = "¡Copiado!";
+  setTimeout(() => { nodo.textContent = original; }, 2000);
+}
+
+async function copiarEnlace(texto, boton) {
+  await escribirPortapapeles(texto);
+  avisarCopiado(boton);
+}
+
+/**
+ * El menú de compartir del sistema sólo se ofrece en pantallas táctiles: ahí
+ * reemplaza a los enlaces directos (llega a Instagram, Facebook y demás apps).
+ * En escritorio los botones explícitos siguen siendo más previsibles.
+ */
+function puedeCompartirNativo() {
+  if (typeof navigator.share !== "function") return false;
+  return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+}
+
+/** Comparte la imagen real como archivo, con el enlace como respaldo. */
+async function compartirNativo(url, previa, nombre, boton) {
+  const etiqueta = boton.querySelector("[data-cert-etiqueta]") || boton;
+  const original = etiqueta.textContent;
+  const titulo = `Certificado de ${nombre} — Compartiendo Arte`;
+
+  const restaurar = () => {
+    boton.disabled = false;
+    etiqueta.textContent = original;
+  };
+
+  boton.disabled = true;
+  etiqueta.textContent = "Preparando…";
+
+  let archivo = null;
+  try {
+    // Se comparte la versión liviana: la original pesa ~1 MB y demora el menú.
+    const respuesta = await fetch(previa, { mode: "cors" });
+    if (respuesta.ok) {
+      const blob = await respuesta.blob();
+      const tipo = blob.type || "image/png";
+      const extension = tipo === "image/webp" ? "webp" : tipo === "image/jpeg" ? "jpg" : "png";
+      archivo = new File([blob], `certificado-compartiendo-arte.${extension}`, { type: tipo });
+    }
+  } catch {
+    // Sin archivo se comparte igual el enlace; nunca se bloquea la acción.
+  }
+
+  const datos = { title: titulo, text: titulo, url };
+  if (archivo && navigator.canShare?.({ files: [archivo] })) datos.files = [archivo];
+
+  try {
+    await navigator.share(datos);
+    restaurar();
+  } catch (error) {
+    // Cancelar el menú no es un error: no se hace nada.
+    if (error?.name === "AbortError") {
+      restaurar();
+      return;
+    }
+    // Último recurso cuando el sistema rechaza el compartir.
+    await escribirPortapapeles(url);
+    restaurar();
+    avisarCopiado(etiqueta);
+  }
 }
 
 export function initCertificados() {
@@ -162,6 +226,8 @@ export function initCertificados() {
 
     const previa = urlPrevia(cert.url);
     const enlaces = enlacesCompartir(cert.url, nombre);
+    // En táctil el menú del sistema reemplaza a los enlaces sueltos.
+    const nativo = puedeCompartirNativo();
 
     resultado.innerHTML = `
       <div class="certificado-tarjeta">
@@ -176,23 +242,29 @@ export function initCertificados() {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
             Descargar
           </button>
+          ${nativo ? `<button type="button" class="boton boton--fantasma" data-cert="compartir">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            <span data-cert-etiqueta>Compartir</span>
+          </button>` : ""}
         </div>
-        <div class="certificado-compartir">
+        ${nativo ? "" : `<div class="certificado-compartir">
           <span class="certificado-compartir__rotulo">Compartir</span>
           <a class="certificado-compartir__opcion" href="${enlaces.whatsapp}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
           <a class="certificado-compartir__opcion" href="${enlaces.telegram}" target="_blank" rel="noopener noreferrer">Telegram</a>
           <a class="certificado-compartir__opcion" href="${enlaces.x}" target="_blank" rel="noopener noreferrer">X</a>
           <button type="button" class="certificado-compartir__opcion" data-cert="copiar">Copiar enlace</button>
-        </div>
+        </div>`}
       </div>`;
 
     const ver = resultado.querySelector('[data-cert="ver"]');
     const descargar = resultado.querySelector('[data-cert="descargar"]');
     const copiar = resultado.querySelector('[data-cert="copiar"]');
+    const compartir = resultado.querySelector('[data-cert="compartir"]');
 
     ver?.addEventListener("click", () => visor?.abrir(previa, nombre, ver));
     descargar?.addEventListener("click", () => descargarImagen(cert.url, documento));
     copiar?.addEventListener("click", () => copiarEnlace(cert.url, copiar));
+    compartir?.addEventListener("click", () => compartirNativo(cert.url, previa, nombre, compartir));
   }
 
   function renderNoEncontrado(mensaje) {

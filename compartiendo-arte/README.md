@@ -184,7 +184,11 @@ Comportamiento de `public/js/videos.js`:
   límite por isolate; para producción conviene una regla WAF de Cloudflare.
 - La interfaz muestra el nombre, **Ver certificado** (visor con foco atrapado,
   Escape y enlace a la imagen completa), **Descargar** (blob con nombre
-  `certificado-compartiendo-arte-<documento>.png`) y enlaces para compartir en
+  `certificado-compartiendo-arte-<documento>.png`) y el bloque de compartir.
+  En pantallas táctiles se ofrece **Compartir** con el menú del sistema
+  (`navigator.share`), que adjunta la imagen como archivo —así llega a
+  Instagram, Facebook y cualquier app instalada—; si el sistema lo rechaza, cae
+  a copiar el enlace. En escritorio se mantienen los enlaces directos a
   WhatsApp, Telegram y X, más copiar el enlace. Si el documento no existe, el
   mensaje es explícito y ofrece contacto.
 - Privacidad: cualquiera que conozca un número de documento puede ver ese
