@@ -252,7 +252,7 @@
         <div class="cabecera-seccion">
           <span class="etiqueta-pill etiqueta-pill--rojo">Certificados</span>
           <h2 id="titulo-certificados">Consulta tu <span class="palabra-acento">certificado</span></h2>
-          <p class="eslogan">Ingresa tu número de documento y descarga tu certificado de participación en PDF.</p>
+          <p class="eslogan">Ingresa tu número de documento y consulta tu certificado de participación.</p>
         </div>
         <div class="certificados__consulta">
           <div class="tarjeta certificados__panel">
@@ -563,6 +563,16 @@
         <button class="lightbox__nav lightbox__nav--sig" id="video-lightbox-sig" aria-label="Video siguiente">›</button>
       </div>
       <p class="lightbox__titulo" id="video-lightbox-titulo"></p>
+    </div>
+  </div>
+
+  <!-- Visor del certificado -->
+  <div class="lightbox certificado-lightbox" id="certificado-lightbox" role="dialog" aria-modal="true" aria-labelledby="certificado-lightbox-titulo" aria-hidden="true">
+    <button type="button" class="lightbox__cerrar" id="certificado-lightbox-cerrar" aria-label="Cerrar vista">✕</button>
+    <div class="lightbox__panel">
+      <img class="lightbox__imagen certificado-lightbox__imagen" id="certificado-lightbox-imagen" alt="">
+      <p class="lightbox__pie" id="certificado-lightbox-titulo"></p>
+      <a class="certificado-lightbox__abrir" id="certificado-lightbox-abrir" href="#" target="_blank" rel="noopener noreferrer">Abrir imagen completa ↗</a>
     </div>
   </div>
 

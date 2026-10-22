@@ -930,6 +930,72 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
 .certificado-tarjeta dt { font-weight: 700; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-secondary); }
 .certificado-tarjeta dd { font-size: 17px; color: var(--dark); }
 
+.certificado-tarjeta__etiqueta {
+  font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.certificado-tarjeta__nombre {
+  margin-block: var(--space-2) var(--space-5);
+  font-size: clamp(22px, 4vw, 30px);
+  line-height: 1.15;
+  color: var(--dark);
+  overflow-wrap: anywhere;
+}
+.certificado-tarjeta__nota { font-size: 16px; color: var(--text-secondary); }
+.certificado-tarjeta__nota a { color: var(--purple); font-weight: 700; }
+
+/* Las acciones envuelven en celular: dos botones anchos no entran juntos. */
+.certificado-acciones {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: var(--space-3);
+}
+
+.certificado-compartir {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+}
+.certificado-compartir__rotulo {
+  font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-right: var(--space-1);
+}
+.certificado-compartir__opcion {
+  display: inline-flex; align-items: center;
+  padding: 8px 14px;
+  border: 1px solid var(--border); border-radius: 999px;
+  background: var(--white); color: var(--purple);
+  font-family: inherit; font-size: 14px; font-weight: 700; line-height: 1.2;
+  text-decoration: none; cursor: pointer;
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition);
+}
+.certificado-compartir__opcion:hover {
+  background: var(--purple-tint); border-color: var(--purple-line); color: var(--purple-deep);
+}
+
+.mensaje-estado__ayuda { margin-top: var(--space-3); font-size: 15px; }
+.mensaje-estado__ayuda a { color: var(--purple); font-weight: 700; }
+
+/* Visor del certificado: la imagen manda y el fondo es opaco. Con el .97
+   compartido con la galería, la página de atrás se transparentaba y distraía. */
+.certificado-lightbox { background: #191524; }
+.certificado-lightbox .lightbox__panel { max-width: min(92vw, 900px); }
+.certificado-lightbox__imagen {
+  max-height: 78vh;
+  background: var(--white);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .38);
+}
+/* En celular la imagen entra chica; el enlace la abre al tamaño real. */
+.certificado-lightbox__abrir {
+  font-size: 14px; font-weight: 700;
+  color: rgba(255, 255, 255, .82);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.certificado-lightbox__abrir:hover { color: var(--yellow); }
+
 .mensaje-estado {
   padding: var(--space-5); border-radius: var(--radius-sm);
   font-size: 16px; background: var(--white); color: var(--dark);
@@ -1217,6 +1283,32 @@ html.tiene-reveal .es-visible { opacity: 1; transform: none; }
     position: static; transform: none;
     width: 44px; height: 44px;
   }
+
+  /* Certificados: el panel y la tarjeta conservaban el padding de escritorio
+     (64 + 48 por lado). A 390px dejaban al nombre con ~125px de ancho y lo
+     partían a mitad de palabra. */
+  .certificados__panel { padding: var(--space-4); }
+  .certificado-tarjeta { padding: var(--space-5); }
+  .certificado-tarjeta__nombre { font-size: clamp(20px, 6.2vw, 26px); }
+  .certificado-tarjeta__etiqueta { font-size: 12px; }
+
+  /* Acciones a lo ancho y compartir en grilla: la fila de píldoras quedaba
+     despareja (WhatsApp solo, Telegram + X, Copiar enlace). */
+  .certificado-acciones { flex-direction: column; }
+  .certificado-acciones .boton { width: 100%; }
+  .certificado-compartir {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+  .certificado-compartir__rotulo { grid-column: 1 / -1; margin-right: 0; }
+  .certificado-compartir__opcion { justify-content: center; }
+}
+
+/* Pantallas muy angostas (320px): el ícono más "Ver certificado" no entra en
+   una línea y el botón se parte. */
+@media (max-width: 359px) {
+  .certificado-acciones .boton { font-size: 15px; padding-inline: var(--space-3); }
 }
 
 /* ===== Tablet: el hero de 16/7 queda demasiado corto para su propio texto =====

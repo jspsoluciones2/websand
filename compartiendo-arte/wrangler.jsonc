@@ -3,6 +3,11 @@
   "name": "compartiendo-arte",
   "main": "src/worker.js",
   "compatibility_date": "2026-10-01",
+  // La URL del proyecto es pública. La service role key NO va acá:
+  // se carga con `wrangler secret put SUPABASE_KEY`.
+  "vars": {
+    "SUPABASE_URL": "https://pxhgkpikwhomzprolxaq.supabase.co"
+  },
   "assets": {
     "directory": "./public",
     "not_found_handling": "single-page-application"

@@ -166,10 +166,30 @@ Comportamiento de `public/js/videos.js`:
 
 ## Certificados
 
-- La consulta se hace por **número de documento** contra `/api/certificado`.
-- El registro de demostración vive en `src/worker.js` (Map `CERTIFICADOS_DEMO`); el documento `123456789` devuelve un certificado de ejemplo.
-- La emisión real de PDFs y su fuente de datos (KV/D1) se definirá en una fase posterior.
-- El endpoint incluye un limitador de intentos básico en memoria; para producción se recomienda reglas WAF de Cloudflare o un binding KV.
+- La fuente de datos es la tabla `public.certificados` de Supabase
+  (`nombre`, `documento` bigint, `url`). La imagen del certificado está alojada
+  en Cloudinary y la URL viene en la fila.
+- El navegador **nunca** habla con Supabase ni ve la service role key. Consulta
+  `GET /api/certificado?doc=…` y el Worker hace la búsqueda exacta por
+  documento con `select=nombre,url&limit=1`.
+- La clave vive como secreto del Worker:
+  `npx wrangler secret put SUPABASE_KEY`. La URL del proyecto está en `vars` de
+  `wrangler.jsonc` (es pública, no hace falta ocultarla).
+- Para desarrollo local, `.dev.vars` (ignorado por git) define `SUPABASE_KEY`.
+  `npm run dev` levanta assets + Worker en el mismo puerto.
+- El documento se valida en el Worker (solo dígitos, 6 a 15) y se normalizan
+  ceros a la izquierda. La respuesta no repite el número y se envía con
+  `Cache-Control: no-store`.
+- Limitador en memoria de 20 consultas por minuto por IP. Sigue siendo un
+  límite por isolate; para producción conviene una regla WAF de Cloudflare.
+- La interfaz muestra el nombre, **Ver certificado** (visor con foco atrapado,
+  Escape y enlace a la imagen completa), **Descargar** (blob con nombre
+  `certificado-compartiendo-arte-<documento>.png`) y enlaces para compartir en
+  WhatsApp, Telegram y X, más copiar el enlace. Si el documento no existe, el
+  mensaje es explícito y ofrece contacto.
+- Privacidad: cualquiera que conozca un número de documento puede ver ese
+  certificado. Es inherente a la consulta pública; el limitador es la única
+  mitigación y no conviene quitar el `no-store`.
 
 ## Notas de accesibilidad y rendimiento
 

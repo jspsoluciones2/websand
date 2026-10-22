@@ -2,29 +2,20 @@
  * Cloudflare Worker — Compartiendo Arte
  * Serves the certificates lookup API. Static assets are served by the
  * Workers assets platform before this Worker runs (see wrangler.jsonc).
+ *
+ * Supabase access uses the service role key, which must live ONLY as a Worker
+ * secret (`wrangler secret put SUPABASE_KEY`). It never reaches the browser:
+ * exposing it would hand over the whole table, bypassing RLS.
  */
 
 // Simple in-memory rate limiter: max requests per IP inside the window.
 // NOTE: Workers isolates are ephemeral — this Map resets between isolates.
 // For production-grade limiting use a KV binding or Cloudflare WAF rules.
-const RATE_LIMIT_MAX = 10; // requests
+const RATE_LIMIT_MAX = 20; // requests
 const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
 const rateBuckets = new Map();
 
-// Demo certificate registry.
-// TODO: replace with a real data source (KV or D1 binding), e.g.:
-//   const cert = await env.CERTIFICADOS_KV.get(docNumber, "json");
-const CERTIFICADOS_DEMO = new Map([
-  [
-    "123456789",
-    {
-      nombre: "Participante Demo",
-      taller: "Taller de Danza Folclórica",
-      fecha: "2025-11-20",
-      url: null, // null = PDF emission system pending
-    },
-  ],
-]);
+const SUPABASE_TIMEOUT_MS = 5_000;
 
 const MENSAJE_NO_ENCONTRADO =
   "No encontramos un certificado asociado a ese número de documento. Verifica el número o contáctanos para recibir ayuda.";
@@ -32,7 +23,12 @@ const MENSAJE_NO_ENCONTRADO =
 function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json; charset=utf-8" },
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      // La respuesta depende del documento consultado: nunca cachear.
+      "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
+    },
   });
 }
 
@@ -47,8 +43,49 @@ function isRateLimited(ip) {
   return bucket.count > RATE_LIMIT_MAX;
 }
 
+/**
+ * Consulta exacta por documento. Devuelve null si no existe.
+ * Lanza si la configuración falta o Supabase responde con error, para que el
+ * llamador distinga "no existe" de "no pudimos consultar".
+ */
+async function buscarCertificado(env, documento) {
+  const base = (env.SUPABASE_URL || "").replace(/\/+$/, "");
+  const key = env.SUPABASE_KEY || "";
+
+  if (!base || !key) {
+    throw new Error("Falta SUPABASE_URL o SUPABASE_KEY en el entorno");
+  }
+
+  const consulta = new URL(`${base}/rest/v1/certificados`);
+  consulta.searchParams.set("documento", `eq.${documento}`);
+  consulta.searchParams.set("select", "nombre,url");
+  consulta.searchParams.set("limit", "1");
+
+  const respuesta = await fetch(consulta, {
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      Accept: "application/json",
+    },
+    signal: AbortSignal.timeout(SUPABASE_TIMEOUT_MS),
+  });
+
+  if (!respuesta.ok) {
+    throw new Error(`Supabase respondió ${respuesta.status}`);
+  }
+
+  const filas = await respuesta.json();
+  const fila = Array.isArray(filas) ? filas[0] : null;
+  if (!fila) return null;
+
+  return {
+    nombre: typeof fila.nombre === "string" ? fila.nombre.trim() : "",
+    url: typeof fila.url === "string" && fila.url ? fila.url : null,
+  };
+}
+
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env) {
     const url = new URL(request.url);
 
     if (request.method === "GET" && url.pathname === "/api/certificado") {
@@ -61,25 +98,34 @@ export default {
         );
       }
 
-      const doc = (url.searchParams.get("doc") || "").trim();
+      const documento = (url.searchParams.get("doc") || "").trim();
 
-      // Validate: digits only, 6-15 chars.
-      if (!/^\d{6,15}$/.test(doc)) {
+      // Validación: solo dígitos, 6 a 15. Evita cualquier inyección en la query.
+      if (!/^\d{6,15}$/.test(documento)) {
         return jsonResponse(
           { error: "Ingresa un número de documento válido (solo dígitos, 6 a 15 números)." },
           400
         );
       }
 
-      // Lookup (demo registry until the emission system is defined).
-      const certificado = CERTIFICADOS_DEMO.get(doc) || null;
+      try {
+        const certificado = await buscarCertificado(env, documento);
 
-      if (certificado) {
-        return jsonResponse({ encontrado: true, certificado });
+        if (certificado) {
+          return jsonResponse({ encontrado: true, certificado });
+        }
+
+        return jsonResponse({ encontrado: false, mensaje: MENSAJE_NO_ENCONTRADO });
+      } catch (error) {
+        console.error("Error consultando certificados:", error?.message || error);
+        return jsonResponse(
+          {
+            error:
+              "No pudimos consultar el certificado en este momento. Intenta de nuevo en unos minutos.",
+          },
+          502
+        );
       }
-
-      // Neutral response — never reveals whether the document number exists.
-      return jsonResponse({ encontrado: false, mensaje: MENSAJE_NO_ENCONTRADO });
     }
 
     return new Response("No encontrado", { status: 404 });
